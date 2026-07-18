@@ -68,12 +68,6 @@ export const TRANSPORT_ITEMS: TransportItem[] = [
     image: '',
   },
   {
-    slug: 'contenedores',
-    title: 'Contenedores',
-    description: 'Portacontenedores para 20 y 40 pies.',
-    image: '',
-  },
-  {
     slug: 'equipos-industriales',
     title: 'Equipos industriales',
     description: 'Maquinaria industrial y equipos de gran porte.',
@@ -153,29 +147,24 @@ export const FLEET: FleetUnit[] = [
     name: 'Camión playo balancín',
     capacity: 'Cargas de gran longitud',
   },
-  {
-    slug: 'portacontenedor',
-    name: 'Portacontenedor',
-    capacity: 'Contenedores de 20 y 40 pies',
-  },
 ]
 
 export const CLIENTS = [
-  { name: 'Wentek', src: '/clientes/wentek.jpeg' },
+  { name: 'Wentek', src: '/clientes/wentek.png' },
   { name: 'Maquinarias Independencia', src: '/clientes/maquinarias-independencia.png' },
   { name: 'Tecno Fundaciones', src: '/clientes/tecno-fundaciones.png' },
   { name: 'ASV Fire', src: '/clientes/asv-fire.png' },
   { name: 'Decormec', src: '/clientes/decormec.png' },
   { name: 'Expoagro', src: '/clientes/expoagro.png' },
   { name: 'Rentall Maquinarias', src: '/clientes/rentall.png' },
-  { name: 'Grúas Daniele', src: '/clientes/gruas-daniele.jpg' },
+  { name: 'Grúas Daniele', src: '/clientes/gruas-daniele.png' },
   { name: 'Bahisa', src: '/clientes/bahisa.png' },
   { name: 'La Rural', src: '/clientes/la-rural.png' },
-  { name: 'Exponenciar', src: '/clientes/exponenciar.jpg' },
+  { name: 'Exponenciar', src: '/clientes/exponenciar.png' },
   { name: 'Game Rental', src: '/clientes/game-rental.png' },
   { name: 'Autoelevadores Daniel', src: '/clientes/autoelevadores-daniel.png' },
   { name: 'American Vial', src: '/clientes/american-vial.png' },
-  { name: 'Sullair Argentina', src: '/clientes/sullair.jpg' },
+  { name: 'Sullair Argentina', src: '/clientes/sullair.png' },
   { name: 'Sheraton', src: '/clientes/sheraton.png' },
   { name: 'Manuga Plus', src: '/clientes/manuga-plus.png' },
 ]
