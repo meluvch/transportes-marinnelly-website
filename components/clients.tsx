@@ -24,15 +24,18 @@ export function Clients() {
             'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
         }}
       >
-        <ul className="flex w-max animate-[marquee_45s_linear_infinite] items-center gap-16 group-hover:[animation-play-state:paused] sm:gap-24">
+        <ul className="flex w-max animate-[marquee_45s_linear_infinite] items-center gap-4 group-hover:[animation-play-state:paused] sm:gap-5">
           {track.map((client, i) => (
-            <li key={`${client.name}-${i}`} className="flex shrink-0 items-center">
+            <li
+              key={`${client.name}-${i}`}
+              className="flex h-20 w-36 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-neutral-50 p-4 transition-colors duration-300 hover:border-brand/40 hover:bg-neutral-100 sm:h-24 sm:w-44"
+            >
               <Image
                 src={client.src || '/placeholder.svg'}
                 alt={client.name}
                 width={200}
                 height={80}
-                className="h-9 w-auto object-contain opacity-80 transition-opacity duration-300 hover:opacity-100 sm:h-11"
+                className="h-full w-full object-contain"
               />
             </li>
           ))}

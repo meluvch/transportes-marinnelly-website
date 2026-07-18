@@ -18,11 +18,12 @@ export function Transport() {
           description="Cada tipo de maquinaria requiere una logística propia. Preparamos el equipamiento, los permisos y la ruta para cada traslado."
         />
 
+        {/* Recommended photos: horizontal, ~1200x800px (3:2), .jpg, under ~300kb each */}
         <ul className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {TRANSPORT_ITEMS.map((item, i) => (
             <motion.li
               key={item.slug}
-              initial={{ opacity: 0, y: 28 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease }}
@@ -31,57 +32,41 @@ export function Transport() {
                 href={`${WHATSAPP_URL}%20-%20${encodeURIComponent(item.title)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-neutral-900"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-background transition-colors duration-300 hover:border-brand/40"
                 aria-label={`Solicitar traslado de ${item.title}`}
               >
-                {item.image ? (
-                  <Image
-                    src={item.image || '/placeholder.svg'}
-                    alt={`Transporte de ${item.title.toLowerCase()}`}
-                    fill
-                    loading="lazy"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                ) : (
-                  /* Branded fallback until a real photo is provided */
-                  <div
-                    className="absolute inset-0 bg-neutral-900"
-                    aria-hidden="true"
-                  >
-                    <div className="absolute inset-0 opacity-[0.08] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_11px)]" />
-                    <Truck className="absolute right-4 top-4 size-8 text-white/15 transition-all duration-700 group-hover:right-5 group-hover:text-brand/60" />
-                    <span
-                      className="absolute left-5 top-5 font-display text-5xl font-bold leading-none text-white/[0.06] tabular-nums"
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                  </div>
-                )}
-                {/* base gradient for legibility */}
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"
-                  aria-hidden="true"
-                />
-                {/* hover darken */}
-                <div
-                  className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30"
-                  aria-hidden="true"
-                />
+                <div className="relative aspect-[3/2] w-full overflow-hidden bg-neutral-900">
+                  {item.image ? (
+                    <Image
+                      src={item.image || '/placeholder.svg'}
+                      alt={`Transporte de ${item.title.toLowerCase()}`}
+                      fill
+                      loading="lazy"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  ) : (
+                    /* Branded fallback until a real photo is provided */
+                    <div className="absolute inset-0 bg-neutral-900" aria-hidden="true">
+                      <div className="absolute inset-0 opacity-[0.08] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_11px)]" />
+                      <Truck className="absolute right-4 top-4 size-8 text-white/15 transition-all duration-700 group-hover:right-5 group-hover:text-brand/60" />
+                      <span className="absolute left-5 top-5 font-display text-4xl font-bold leading-none text-white/[0.06] tabular-nums">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+                  )}
+                </div>
 
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5">
+                <div className="flex items-center justify-between gap-3 p-5">
                   <div>
-                    <h3 className="font-display text-lg font-semibold text-white">
+                    <h3 className="font-display text-base font-semibold text-foreground transition-colors duration-300 group-hover:text-brand">
                       {item.title}
                     </h3>
-                    <p className="mt-1 max-h-0 overflow-hidden text-sm leading-relaxed text-white/75 opacity-0 transition-all duration-500 group-hover:max-h-20 group-hover:opacity-100">
+                    <p className="mt-1 text-sm leading-snug text-muted-foreground">
                       {item.description}
                     </p>
-                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                      Solicitar traslado
-                      <ArrowUpRight className="size-4" />
-                    </span>
                   </div>
+                  <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand" />
                 </div>
               </a>
             </motion.li>

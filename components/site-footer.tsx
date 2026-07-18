@@ -10,9 +10,9 @@ export function SiteFooter() {
             <Image
               src="/logo-marinelly.png"
               alt="Transporte y Logística Marinelly"
-              width={170}
-              height={44}
-              className="h-8 w-auto"
+              width={180}
+              height={60}
+              className="h-10 w-auto"
             />
             <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
               Transporte de maquinaria pesada y cargas especiales en toda
