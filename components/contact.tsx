@@ -5,22 +5,6 @@ import { MessageCircle, Mail, ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
 import { EMAIL, EMAIL_HREF, WHATSAPP_URL } from '@/lib/site'
 
-const FIELDS = [
-  { name: 'nombre', label: 'Nombre', type: 'text', required: true, span: 1 },
-  { name: 'empresa', label: 'Empresa', type: 'text', required: false, span: 1 },
-  { name: 'telefono', label: 'Teléfono', type: 'tel', required: true, span: 1 },
-  { name: 'email', label: 'Email', type: 'email', required: false, span: 1 },
-  { name: 'origen', label: 'Origen', type: 'text', required: true, span: 1 },
-  { name: 'destino', label: 'Destino', type: 'text', required: true, span: 1 },
-  {
-    name: 'maquinaria',
-    label: 'Tipo de maquinaria',
-    type: 'text',
-    required: false,
-    span: 2,
-  },
-] as const
-
 export function Contact() {
   const [pending, setPending] = useState(false)
 
@@ -33,13 +17,8 @@ export function Contact() {
       'Hola Guido! Quiero cotizar un traslado.',
       '',
       `Nombre: ${get('nombre')}`,
-      `Empresa: ${get('empresa')}`,
       `Teléfono: ${get('telefono')}`,
-      `Email: ${get('email')}`,
-      `Origen: ${get('origen')}`,
-      `Destino: ${get('destino')}`,
-      `Maquinaria: ${get('maquinaria')}`,
-      `Mensaje: ${get('mensaje')}`,
+      `Detalle: ${get('mensaje')}`,
     ].join('\n')
     const url = `https://wa.me/5491163640392?text=${encodeURIComponent(message)}`
     window.open(url, '_blank', 'noopener,noreferrer')
@@ -60,7 +39,8 @@ export function Contact() {
             <Reveal delay={0.05}>
               <p className="max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
                 Contanos tu proyecto. Coordinamos el traslado de principio a fin y
-                te respondemos con una cotización clara.
+                te respondemos con una cotización clara, en general en menos de
+                una hora hábil.
               </p>
             </Reveal>
             <Reveal delay={0.1}>
@@ -85,44 +65,58 @@ export function Contact() {
             </Reveal>
           </div>
 
-          {/* Right — form */}
+          {/* Right — short form: WhatsApp above is the main CTA, this is a
+              quick alternative for people who'd rather type than chat. */}
           <Reveal delay={0.1}>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {FIELDS.map((field) => (
-                <div
-                  key={field.name}
-                  className={field.span === 2 ? 'sm:col-span-2' : ''}
+              <div>
+                <label
+                  htmlFor="nombre"
+                  className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground"
                 >
-                  <label
-                    htmlFor={field.name}
-                    className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground"
-                  >
-                    {field.label}
-                    {field.required ? <span className="text-brand"> *</span> : null}
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    type={field.type}
-                    required={field.required}
-                    className="w-full border-0 border-b border-border bg-transparent pb-2 text-foreground outline-none transition-colors focus:border-brand"
-                  />
-                </div>
-              ))}
+                  Nombre<span className="text-brand"> *</span>
+                </label>
+                <input
+                  id="nombre"
+                  name="nombre"
+                  type="text"
+                  required
+                  className="w-full border-0 border-b border-border bg-transparent pb-2 text-foreground outline-none transition-colors focus:border-brand"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="telefono"
+                  className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground"
+                >
+                  Teléfono<span className="text-brand"> *</span>
+                </label>
+                <input
+                  id="telefono"
+                  name="telefono"
+                  type="tel"
+                  required
+                  className="w-full border-0 border-b border-border bg-transparent pb-2 text-foreground outline-none transition-colors focus:border-brand"
+                />
+              </div>
+
               <div className="sm:col-span-2">
                 <label
                   htmlFor="mensaje"
                   className="mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground"
                 >
-                  Mensaje
+                  Contanos tu traslado
                 </label>
                 <textarea
                   id="mensaje"
                   name="mensaje"
                   rows={3}
-                  className="w-full resize-none border-0 border-b border-border bg-transparent pb-2 text-foreground outline-none transition-colors focus:border-brand"
+                  placeholder="Origen, destino y tipo de maquinaria a trasladar"
+                  className="w-full resize-none border-0 border-b border-border bg-transparent pb-2 text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-brand"
                 />
               </div>
+
               <div className="sm:col-span-2">
                 <button
                   type="submit"

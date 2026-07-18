@@ -1,7 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'motion/react'
+import { motion } from 'motion/react'
 import {
   UserCheck,
   Satellite,
@@ -32,54 +31,45 @@ const ICONS: LucideIcon[] = [
 const ease = [0.16, 1, 0.3, 1] as const
 
 export function Commitment() {
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start 0.8', 'end 0.4'],
-  })
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
-
   return (
-    <section
-      id="compromiso"
-      className="scroll-mt-24 bg-background py-24 sm:py-32"
-    >
-      <div ref={ref} className="mx-auto max-w-6xl px-6 lg:px-8">
+    <section id="compromiso" className="scroll-mt-24 bg-background py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
           eyebrow="Nuestro compromiso"
           title="Todo lo que hace que puedas delegar sin preocuparte."
           description="No trasladamos máquinas. Nos hacemos cargo de que lleguen exactamente como salieron."
         />
 
-        {/* connecting orange line */}
-        <div className="relative mt-14 mb-4 h-px w-full bg-border">
-          <motion.div
-            style={{ scaleX }}
-            className="absolute inset-y-0 left-0 w-full origin-left bg-brand"
-            aria-hidden="true"
-          />
-        </div>
-
-        <ul className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
           {COMMITMENTS.map((item, i) => {
             const Icon = ICONS[i]
             return (
               <motion.li
                 key={item.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, delay: (i % 3) * 0.06, ease }}
-                className="group flex flex-col gap-4 bg-background p-7 transition-colors duration-300 hover:bg-neutral-50 sm:p-8"
+                transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease }}
+                className="group flex items-center gap-4 bg-background p-5 transition-colors duration-300 hover:bg-neutral-50 sm:p-6"
               >
-                <span className="inline-flex size-11 items-center justify-center rounded-xl border border-border text-foreground transition-colors duration-300 group-hover:border-brand/40 group-hover:text-brand">
+                <motion.span
+                  initial={{ scale: 0, rotate: -20, opacity: 0 }}
+                  whileInView={{ scale: 1, rotate: 0, opacity: 1 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{
+                    duration: 0.5,
+                    delay: (i % 3) * 0.08 + 0.15,
+                    ease,
+                  }}
+                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-border text-foreground transition-colors duration-300 group-hover:border-brand/40 group-hover:text-brand"
+                >
                   <Icon className="size-5" strokeWidth={1.5} />
-                </span>
+                </motion.span>
                 <div>
-                  <h3 className="font-display text-lg font-semibold text-foreground">
+                  <h3 className="font-display text-base font-semibold text-foreground">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-1 text-sm leading-snug text-muted-foreground">
                     {item.text}
                   </p>
                 </div>
