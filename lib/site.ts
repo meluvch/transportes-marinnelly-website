@@ -13,6 +13,7 @@ export const LOCATION = {
 export const NAV_LINKS = [
   { label: 'Servicios', href: '#servicios' },
   { label: 'Cobertura', href: '#cobertura' },
+  { label: 'Nuestra flota', href: '#flota' },
   { label: 'Nuestro compromiso', href: '#compromiso' },
 ] as const
 

@@ -19,10 +19,10 @@ export default function Page() {
         <Hero />
         <Clients />
         <Transport />
+        <Coverage />
         <Impact />
         <Commitment />
         <Fleet />
-        <Coverage />
         <Contact />
       </main>
       <SiteFooter />
