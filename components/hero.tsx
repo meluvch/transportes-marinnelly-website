@@ -18,18 +18,16 @@ export function Hero() {
         <div className="absolute right-0 top-1/4 h-64 w-64 translate-x-1/3 rounded-full bg-brand/20 blur-3xl" />
       </div>
 
-      {/*
-        To use a real background video, drop a file at /public/hero.mp4
-        (and an optional /public/hero-poster.jpg) and uncomment below:
-
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          autoPlay muted loop playsInline
-          poster="/hero-poster.jpg"
-        >
-          <source src="/hero.mp4" type="video/mp4" />
-        </video>
-      */}
+      {/* Background video */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
 
       {/* Contrast overlays — darker on the left where the text sits */}
       <div
