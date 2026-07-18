@@ -126,24 +126,35 @@ export const COMMITMENTS = [
   },
 ]
 
-export const FLEET = [
+export type FleetUnit = {
+  slug: 'plancha' | 'carreton-15m' | 'carreton-cuello' | 'playo-balancin' | 'portacontenedor'
+  name: string
+  capacity: string
+}
+
+export const FLEET: FleetUnit[] = [
   {
+    slug: 'plancha',
     name: 'Plancha hidráulica autodeslizante',
     capacity: '14 toneladas',
   },
   {
+    slug: 'carreton-15m',
     name: 'Carretón de 15 metros',
     capacity: '25 toneladas',
   },
   {
+    slug: 'carreton-cuello',
     name: 'Carretón cuello desmontable',
     capacity: '40 toneladas',
   },
   {
+    slug: 'playo-balancin',
     name: 'Camión playo balancín',
     capacity: 'Cargas de gran longitud',
   },
   {
+    slug: 'portacontenedor',
     name: 'Portacontenedor',
     capacity: 'Contenedores de 20 y 40 pies',
   },
