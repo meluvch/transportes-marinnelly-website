@@ -22,7 +22,7 @@ const ICONS: Record<string, typeof PlanchaIcon> = {
 
 export function Fleet() {
   return (
-    <section className="bg-background py-24 sm:py-32">
+    <section id="flota" className="scroll-mt-24 bg-background py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
           eyebrow="Nuestra flota"
