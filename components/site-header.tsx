@@ -40,10 +40,10 @@ export function SiteHeader() {
           <Image
             src="/logo-marinelly.png"
             alt="Transporte y Logística Marinelly"
-            width={150}
-            height={40}
+            width={180}
+            height={60}
             priority
-            className="h-6 w-auto sm:h-7"
+            className="h-9 w-auto sm:h-10"
           />
         </a>
 
@@ -87,9 +87,9 @@ export function SiteHeader() {
             <Image
               src="/logo-marinelly.png"
               alt="Transporte y Logística Marinelly"
-              width={150}
-              height={40}
-              className="h-7 w-auto"
+              width={180}
+              height={60}
+              className="h-9 w-auto"
             />
             <button
               type="button"

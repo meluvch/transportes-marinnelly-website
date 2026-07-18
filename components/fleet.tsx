@@ -9,7 +9,6 @@ import {
   Carreton15Icon,
   CarretonCuelloIcon,
   PlayoBalancinIcon,
-  PortacontenedorIcon,
 } from '@/components/icons/fleet-icons'
 
 const ease = [0.16, 1, 0.3, 1] as const
@@ -19,7 +18,6 @@ const ICONS: Record<string, typeof PlanchaIcon> = {
   'carreton-15m': Carreton15Icon,
   'carreton-cuello': CarretonCuelloIcon,
   'playo-balancin': PlayoBalancinIcon,
-  portacontenedor: PortacontenedorIcon,
 }
 
 export function Fleet() {
@@ -32,7 +30,8 @@ export function Fleet() {
           description="Equipamiento especializado que se adapta al peso, la altura y el tipo de carga de tu maquinaria."
         />
 
-        <ul className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* 4 units, 2 columns x 2 rows */}
+        <ul className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {FLEET.map((unit, i) => {
             const Icon = ICONS[unit.slug]
             return (
@@ -41,24 +40,24 @@ export function Fleet() {
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, delay: (i % 3) * 0.08, ease }}
-                className="group flex flex-col items-start gap-4 rounded-2xl border border-border bg-background p-6 transition-colors duration-300 hover:border-brand/40 hover:bg-neutral-50"
+                transition={{ duration: 0.55, delay: (i % 2) * 0.1, ease }}
+                className="group relative flex flex-col items-start gap-4 overflow-hidden rounded-2xl border border-border bg-background p-6 transition-colors duration-500 hover:border-brand"
               >
-                <motion.span
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.5, delay: (i % 3) * 0.08 + 0.1, ease }}
-                  className="inline-flex size-14 items-center justify-center rounded-xl border border-border text-foreground transition-colors duration-300 group-hover:border-brand/40 group-hover:text-brand"
-                >
-                  <Icon className="size-8" strokeWidth={1.4} />
-                </motion.span>
+                {/* orange fill that grows in from behind on hover */}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 origin-bottom scale-y-0 bg-brand transition-transform duration-500 ease-out group-hover:scale-y-100"
+                />
 
-                <div>
-                  <h3 className="font-display text-base font-semibold text-foreground transition-colors duration-300 group-hover:text-brand">
+                <span className="relative inline-flex size-14 items-center justify-center rounded-xl border border-border text-foreground transition-colors duration-500 group-hover:border-brand-foreground/30 group-hover:text-brand-foreground">
+                  <Icon className="size-8" strokeWidth={1.4} />
+                </span>
+
+                <div className="relative">
+                  <h3 className="font-display text-base font-semibold text-foreground transition-colors duration-500 group-hover:text-brand-foreground">
                     {unit.name}
                   </h3>
-                  <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground transition-colors duration-500 group-hover:text-brand-foreground/85">
                     <Gauge className="size-3.5 shrink-0" />
                     {unit.capacity}
                   </p>

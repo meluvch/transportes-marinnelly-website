@@ -61,12 +61,17 @@ export function Commitment() {
                     delay: (i % 3) * 0.08 + 0.15,
                     ease,
                   }}
-                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-border text-foreground transition-colors duration-300 group-hover:border-brand/40 group-hover:text-brand"
+                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-brand/30 bg-brand/10 text-brand transition-transform duration-300 group-hover:scale-110"
                 >
                   <Icon className="size-5" strokeWidth={1.5} />
                 </motion.span>
                 <div>
-                  <h3 className="font-display text-base font-semibold text-foreground">
+                  <h3 className="relative inline-block font-display text-base font-semibold text-foreground">
+                    {/* highlighter mark behind the title, sweeps in on hover */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute -inset-x-1.5 top-[15%] -z-10 h-[70%] origin-left scale-x-0 -skew-x-6 bg-brand/25 transition-transform duration-400 ease-out group-hover:scale-x-100"
+                    />
                     {item.title}
                   </h3>
                   <p className="mt-1 text-sm leading-snug text-muted-foreground">
