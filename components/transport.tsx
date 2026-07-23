@@ -1,16 +1,104 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { motion } from 'motion/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowUpRight, Truck } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
 import { TRANSPORT_ITEMS, WHATSAPP_URL } from '@/lib/site'
 
-const ease = [0.16, 1, 0.3, 1] as const
-
 export function Transport() {
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLUListElement>(null)
+  const cardRefs = useRef<(HTMLLIElement | null)[]>([])
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+
+    const ctx = gsap.context(() => {
+      const cards = cardRefs.current.filter(Boolean) as HTMLLIElement[]
+      const mm = gsap.matchMedia()
+
+      // Desktop/tablet: cards start piled up like a shuffled deck near the
+      // center of the grid, and "deal" out into their real grid slots as
+      // you scroll through the section (native CSS grid still drives the
+      // final/responsive layout — we're only offsetting each card's paint
+      // position with a transform, not its actual layout position).
+      mm.add('(min-width: 768px)', () => {
+        const container = gridRef.current
+        if (!container) return
+        const containerRect = container.getBoundingClientRect()
+        const centerX = containerRect.left + containerRect.width / 2
+        const centerY = containerRect.top + containerRect.height / 2
+
+        const deltas = cards.map((card) => {
+          const r = card.getBoundingClientRect()
+          const cx = r.left + r.width / 2
+          const cy = r.top + r.height / 2
+          return { dx: centerX - cx, dy: centerY - cy }
+        })
+
+        cards.forEach((card, i) => {
+          gsap.set(card, {
+            x: deltas[i].dx,
+            y: deltas[i].dy,
+            rotate: (i % 2 === 0 ? -1 : 1) * (5 + (i % 3) * 2.5),
+            scale: 0.8,
+            zIndex: cards.length - i,
+          })
+        })
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: 'top 18%',
+            end: '+=' + cards.length * 90,
+            scrub: 0.6,
+            pin: true,
+            anticipatePin: 1,
+          },
+        })
+
+        cards.forEach((card, i) => {
+          tl.to(
+            card,
+            { x: 0, y: 0, rotate: 0, scale: 1, duration: 1, ease: 'power2.out' },
+            i * 0.85
+          )
+        })
+
+        return () => {
+          gsap.set(cards, { clearProps: 'all' })
+        }
+      })
+
+      // Mobile: simple staggered fade/slide-up, no scroll-jacking pin
+      mm.add('(max-width: 767px)', () => {
+        gsap.from(cards, {
+          opacity: 0,
+          y: 22,
+          duration: 0.6,
+          ease: 'power3.out',
+          stagger: 0.08,
+          scrollTrigger: { trigger: gridRef.current, start: 'top 88%' },
+        })
+      })
+
+      const onResize = () => ScrollTrigger.refresh()
+      window.addEventListener('resize', onResize)
+      return () => window.removeEventListener('resize', onResize)
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section id="servicios" className="scroll-mt-24 bg-background py-24 sm:py-32">
+    <section
+      id="servicios"
+      ref={sectionRef}
+      className="scroll-mt-24 overflow-hidden bg-background py-24 sm:py-32"
+    >
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
           eyebrow="Qué transportamos"
@@ -19,20 +107,23 @@ export function Transport() {
         />
 
         {/* Recommended photos: horizontal, ~1200x800px (3:2), .jpg, under ~300kb each */}
-        <ul className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul
+          ref={gridRef}
+          className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6"
+        >
           {TRANSPORT_ITEMS.map((item, i) => (
-            <motion.li
+            <li
               key={item.slug}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease }}
+              ref={(el) => {
+                cardRefs.current[i] = el
+              }}
+              className="will-change-transform"
             >
               <a
                 href={`${WHATSAPP_URL}%20-%20${encodeURIComponent(item.title)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-background transition-colors duration-300 hover:border-brand/40"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-sm transition-colors duration-300 hover:border-brand/40"
                 aria-label={`Solicitar traslado de ${item.title}`}
               >
                 <div className="relative aspect-[3/2] w-full overflow-hidden bg-neutral-900">
@@ -69,7 +160,7 @@ export function Transport() {
                   <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand" />
                 </div>
               </a>
-            </motion.li>
+            </li>
           ))}
         </ul>
       </div>
