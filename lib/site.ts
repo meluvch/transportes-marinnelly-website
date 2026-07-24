@@ -21,6 +21,8 @@ export type TransportItem = {
   slug: string
   title: string
   description: string
+  /** Longer copy shown in the expanded detail card. */
+  longDescription: string
   /** Drop a real photo path here (e.g. '/transporte/excavadoras.jpg'). Leave '' to show the branded fallback. */
   image: string
 }
@@ -30,54 +32,72 @@ export const TRANSPORT_ITEMS: TransportItem[] = [
     slug: 'excavadoras',
     title: 'Excavadoras',
     description: 'Traslado seguro de excavadoras de cadenas y ruedas.',
+    longDescription:
+      'Excavadoras de cadenas y de ruedas, para obra vial, movimiento de suelo y demolición. Por su peso y el brazo/pluma que sobresale, el traslado requiere plancha baja y a veces desarme parcial del balde o la pluma para respetar altura y ancho de ruta.',
     image: '/transporte/excavadoras.jpg',
   },
   {
     slug: 'retroexcavadoras',
     title: 'Retroexcavadoras',
     description: 'Logística precisa para retroexcavadoras y mixtas.',
+    longDescription:
+      'Equipos mixtos (pala frontal + retro), muy usados en obras urbanas y rurales. Son más compactas que una excavadora grande, pero igual exigen amarre firme y cuidado en el descenso por su centro de gravedad alto.',
     image: '/transporte/retroexcavadoras.jpg',
   },
   {
     slug: 'motoniveladoras',
     title: 'Motoniveladoras',
     description: 'Transporte de motoniveladoras y equipo vial.',
+    longDescription:
+      'Equipo vial de gran longitud, usado para nivelación de caminos y terraplenes. Su hoja frontal y el largo total de la máquina piden un carretón extendido y planificación de ruta para curvas y cruces angostos.',
     image: '/transporte/motoniveladoras.jpg',
   },
   {
     slug: 'rodillos',
     title: 'Rodillos compactadores',
     description: 'Traslado de rodillos y compactadores de suelo.',
+    longDescription:
+      'Compactadores de suelo y asfalto, de distintos pesos según sean para obra vial o urbana. Suelen trasladarse en plancha por su bajo centro de gravedad, aunque el peso concentrado en poco espacio exige buen cálculo de la carga por eje.',
     image: '/transporte/rodillos.jpg',
   },
   {
     slug: 'gruas',
     title: 'Grúas',
     description: 'Movimiento de grúas y equipos de izaje.',
+    longDescription:
+      'Grúas móviles y equipos de izaje, desde modelos chicos hasta unidades de gran porte. El traslado varía mucho según el modelo: algunas viajan armadas, otras requieren desmontar la pluma o los contrapesos para cumplir con los límites de ruta.',
     image: '/transporte/gruas.jpg',
   },
   {
     slug: 'autoelevadores',
     title: 'Autoelevadores',
     description: 'Transporte de autoelevadores y equipos de carga.',
+    longDescription:
+      'Autoelevadores de uso industrial y logístico, de distintas capacidades de carga. Son relativamente compactos, pero por su peso concentrado adelante necesitan un amarre específico para el traslado.',
     image: '/transporte/autoelevadores.jpg',
   },
   {
     slug: 'maquinaria-agricola',
     title: 'Maquinaria agrícola',
     description: 'Cosechadoras, tractores, sembradoras y pulverizadoras.',
+    longDescription:
+      'Cosechadoras, tractores, sembradoras y pulverizadoras. Muchas veces son cargas de ancho o alto considerable (cabezales, plataformas), por lo que suelen necesitar desarme parcial y permisos de carga especial según la ruta.',
     image: '/transporte/maquinaria-agricola.jpg',
   },
   {
     slug: 'equipos-industriales',
     title: 'Equipos industriales',
     description: 'Maquinaria industrial y equipos de gran porte.',
+    longDescription:
+      'Maquinaria de planta e industria pesada: desde equipos de producción hasta estructuras de gran porte. Cada traslado se planifica a medida según el peso, las dimensiones y el punto exacto de carga y descarga.',
     image: '/transporte/equipos-industriales.jpg',
   },
   {
     slug: 'cargas-especiales',
     title: 'Cargas especiales',
     description: 'Soluciones a medida para cargas fuera de norma.',
+    longDescription:
+      'Todo lo que no entra en las categorías anteriores: piezas fuera de norma, estructuras, equipos atípicos. Se coordina de forma personalizada: relevamiento previo, permisos especiales y, si hace falta, escolta.',
     image: '/transporte/cargas-especiales.jpg',
   },
 ]
