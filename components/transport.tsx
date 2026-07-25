@@ -52,7 +52,7 @@ export function Transport() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinRef.current,
-          start: 'top 12%',
+          start: 'top top',
           end: '+=' + N * SCROLL_PER_CARD,
           scrub: 0.8,
           pin: true,
@@ -190,8 +190,8 @@ export function Transport() {
       ref={sectionRef}
       className="scroll-mt-24 overflow-hidden bg-background py-24 sm:py-32"
     >
-      <div className="mx-auto max-w-6xl px-6 lg:px-8">
-        <div ref={pinRef} className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
+      <div ref={pinRef} className="mx-auto flex min-h-svh w-full max-w-6xl items-center px-6 pt-20 lg:px-8">
+        <div className="grid w-full items-center gap-14 lg:grid-cols-2 lg:gap-16">
           <SectionHeading
             eyebrow="Qué transportamos"
             title="Equipos pesados y cargas especiales, en manos expertas."

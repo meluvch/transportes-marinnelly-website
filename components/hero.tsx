@@ -1,46 +1,79 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowRight, ArrowDown } from 'lucide-react'
 import { WHATSAPP_URL } from '@/lib/site'
 
 const ease = [0.16, 1, 0.3, 1] as const
 
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const bgRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const arrowRef = useRef<HTMLDivElement>(null)
+
+  // Parallax hide: as the hero scrolls out, the background drifts up slower
+  // than the page (depth) while the foreground text hides a beat sooner —
+  // both fully faded out by the time the hero leaves the viewport.
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+
+    const ctx = gsap.context(() => {
+      const scrollRange = { trigger: sectionRef.current, start: 'top top', end: 'bottom top', scrub: true }
+
+      gsap.to(bgRef.current, { yPercent: -15, opacity: 0, ease: 'none', scrollTrigger: scrollRange })
+      gsap.to(contentRef.current, { yPercent: -35, opacity: 0, ease: 'none', scrollTrigger: scrollRange })
+      gsap.to(arrowRef.current, {
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: { trigger: sectionRef.current, start: 'top top', end: 'top+=200 top', scrub: true },
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
     <section
+      ref={sectionRef}
       id="inicio"
       className="relative flex min-h-svh w-full items-end overflow-hidden bg-neutral-900"
     >
-      {/* Branded backdrop — shown until a real hero video/photo is provided */}
-      <div className="absolute inset-0 bg-neutral-900" aria-hidden="true">
-        <div className="absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_14px)]" />
-        <div className="absolute right-0 top-1/4 h-64 w-64 translate-x-1/3 rounded-full bg-brand/20 blur-3xl" />
+      <div ref={bgRef} className="absolute inset-0">
+        {/* Branded backdrop — shown until a real hero video/photo is provided */}
+        <div className="absolute inset-0 bg-neutral-900" aria-hidden="true">
+          <div className="absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_14px)]" />
+          <div className="absolute right-0 top-1/4 h-64 w-64 translate-x-1/3 rounded-full bg-brand/20 blur-3xl" />
+        </div>
+
+        {/* Background video — a vertical cut for mobile, the wide cut everywhere else */}
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src="/hero-mobile.mp4" media="(max-width: 767px)" type="video/mp4" />
+          <source src="/hero.mp4" type="video/mp4" />
+        </video>
+
+        {/* Contrast overlays — darker on the left where the text sits */}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"
+          aria-hidden="true"
+        />
       </div>
 
-      {/* Background video */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source src="/hero.mp4" type="video/mp4" />
-      </video>
-
-      {/* Contrast overlays — darker on the left where the text sits */}
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"
-        aria-hidden="true"
-      />
-
       {/* Editorial content — bottom-left aligned, not centered */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-40 sm:pb-28 lg:px-8">
+      <div ref={contentRef} className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-40 sm:pb-28 lg:px-8">
         <div className="max-w-2xl">
           <motion.span
             initial={{ opacity: 0, y: 16 }}
@@ -98,6 +131,7 @@ export function Hero() {
 
       {/* Subtle scroll indicator */}
       <motion.div
+        ref={arrowRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}

@@ -5,16 +5,16 @@ export const EMAIL = 'contacto@transportesmarinelly.com.ar'
 export const EMAIL_HREF = `mailto:${EMAIL}`
 
 export const LOCATION = {
-  base: 'Bernal',
-  region: 'Provincia de Buenos Aires',
+  base: 'Quilmes',
+  region: 'Prov. de Buenos Aires',
   country: 'Argentina',
 }
 
 export const NAV_LINKS = [
   { label: 'Servicios', href: '#servicios' },
   { label: 'Cobertura', href: '#cobertura' },
-  { label: 'Nuestra flota', href: '#flota' },
   { label: 'Nuestro compromiso', href: '#compromiso' },
+  { label: 'Nuestra flota', href: '#flota' },
 ] as const
 
 export type TransportItem = {
