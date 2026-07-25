@@ -174,7 +174,7 @@ export function Coverage() {
     <section
       id="cobertura"
       ref={sectionRef}
-      className="scroll-mt-24 overflow-hidden bg-neutral-50 py-24 sm:py-32"
+      className="scroll-mt-24 overflow-hidden bg-neutral-50 py-20 sm:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid items-center gap-14 lg:grid-cols-[0.8fr_1.5fr] lg:gap-12">

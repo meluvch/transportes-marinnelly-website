@@ -188,9 +188,9 @@ export function Transport() {
     <section
       id="servicios"
       ref={sectionRef}
-      className="scroll-mt-24 overflow-hidden bg-background py-24 sm:py-32"
+      className="scroll-mt-24 overflow-hidden bg-background"
     >
-      <div ref={pinRef} className="mx-auto flex min-h-svh w-full max-w-6xl items-center px-6 pt-20 lg:px-8">
+      <div ref={pinRef} className="mx-auto flex min-h-[85svh] w-full max-w-6xl items-center px-6 pt-20 lg:px-8">
         <div className="grid w-full items-center gap-14 lg:grid-cols-2 lg:gap-16">
           <SectionHeading
             eyebrow="Qué transportamos"

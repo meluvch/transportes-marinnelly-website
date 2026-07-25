@@ -8,7 +8,7 @@ export function Clients() {
   const track = [...CLIENTS, ...CLIENTS]
 
   return (
-    <section className="border-b border-border/60 bg-background py-16 sm:py-20">
+    <section className="relative rounded-t-[1.75rem] border-b border-border/60 bg-background py-16 shadow-[0_-30px_60px_-24px_rgba(0,0,0,0.35)] sm:rounded-t-[2.5rem] sm:py-20">
       <Reveal className="mx-auto max-w-6xl px-6 lg:px-8">
         <p className="text-center text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
           Con la confianza de empresas como

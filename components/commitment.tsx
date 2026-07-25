@@ -32,7 +32,10 @@ const ease = [0.16, 1, 0.3, 1] as const
 
 export function Commitment() {
   return (
-    <section id="compromiso" className="scroll-mt-24 bg-background py-24 sm:py-32">
+    <section
+      id="compromiso"
+      className="relative scroll-mt-24 rounded-t-[1.75rem] bg-background py-20 shadow-[0_-30px_60px_-24px_rgba(0,0,0,0.35)] sm:rounded-t-[2.5rem] sm:py-28"
+    >
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <SectionHeading
           eyebrow="Nuestro compromiso"
