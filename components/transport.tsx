@@ -275,7 +275,7 @@ export function Transport() {
             className="fixed z-[60] flex flex-col overflow-hidden bg-background shadow-2xl"
           >
             <div ref={overlayContentRef} className="flex h-full flex-col overflow-y-auto">
-              <div className="relative aspect-[16/9] w-full shrink-0 sm:aspect-[21/9]">
+              <div className="relative aspect-[16/9] w-full shrink-0 sm:aspect-auto sm:h-48 lg:h-56">
                 {item.image ? (
                   <Image
                     src={item.image || '/placeholder.svg'}

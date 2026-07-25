@@ -1,48 +1,18 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowRight, ArrowDown } from 'lucide-react'
 import { WHATSAPP_URL } from '@/lib/site'
 
 const ease = [0.16, 1, 0.3, 1] as const
 
 export function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const bgRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const arrowRef = useRef<HTMLDivElement>(null)
-
-  // Parallax hide: as the hero scrolls out, the background drifts up slower
-  // than the page (depth) while the foreground text hides a beat sooner —
-  // both fully faded out by the time the hero leaves the viewport.
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger)
-
-    const ctx = gsap.context(() => {
-      const scrollRange = { trigger: sectionRef.current, start: 'top top', end: 'bottom top', scrub: true }
-
-      gsap.to(bgRef.current, { yPercent: -15, opacity: 0, ease: 'none', scrollTrigger: scrollRange })
-      gsap.to(contentRef.current, { yPercent: -35, opacity: 0, ease: 'none', scrollTrigger: scrollRange })
-      gsap.to(arrowRef.current, {
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: { trigger: sectionRef.current, start: 'top top', end: 'top+=200 top', scrub: true },
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
     <section
-      ref={sectionRef}
       id="inicio"
-      className="relative flex min-h-svh w-full items-end overflow-hidden bg-neutral-900"
+      className="sticky top-0 flex min-h-svh w-full items-end overflow-hidden bg-neutral-900"
     >
-      <div ref={bgRef} className="absolute inset-0">
+      <div className="absolute inset-0">
         {/* Branded backdrop — shown until a real hero video/photo is provided */}
         <div className="absolute inset-0 bg-neutral-900" aria-hidden="true">
           <div className="absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_14px)]" />
@@ -73,7 +43,7 @@ export function Hero() {
       </div>
 
       {/* Editorial content — bottom-left aligned, not centered */}
-      <div ref={contentRef} className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-40 sm:pb-28 lg:px-8">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-40 sm:pb-28 lg:px-8">
         <div className="max-w-2xl">
           <motion.span
             initial={{ opacity: 0, y: 16 }}
@@ -131,7 +101,6 @@ export function Hero() {
 
       {/* Subtle scroll indicator */}
       <motion.div
-        ref={arrowRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
