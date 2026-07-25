@@ -11,8 +11,13 @@ import { TRANSPORT_ITEMS, WHATSAPP_URL } from '@/lib/site'
 const N = TRANSPORT_ITEMS.length // 9 categories
 const CTA_INDEX = N // the deck's final "card" is the WhatsApp CTA, not a category
 
+// How much scroll (in px) each card "step" takes. Bigger = slower, more
+// deliberate transitions instead of the cards snapping past in a blur.
+const SCROLL_PER_CARD = 260
+
 export function Transport() {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const pinRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const [activeIndex, setActiveIndex] = useState(0)
@@ -30,8 +35,8 @@ export function Transport() {
     const ctx = gsap.context(() => {
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
 
-      // Resting "stacked" look — fixed per card, a few mm of peek behind
-      // whichever card is currently on top.
+      // Resting "stacked" look — a few mm of peek behind whichever card is
+      // currently on top.
       cards.forEach((card, i) => {
         const depth = Math.min(i, 3)
         gsap.set(card, {
@@ -42,12 +47,14 @@ export function Transport() {
         })
       })
 
+      // Pin the title together with the deck so both stay put on screen —
+      // only the cards move as the user scrolls.
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: stageRef.current,
-          start: 'top 15%',
-          end: '+=' + N * 90,
-          scrub: 0.6,
+          trigger: pinRef.current,
+          start: 'top 12%',
+          end: '+=' + N * SCROLL_PER_CARD,
+          scrub: 0.8,
           pin: true,
           anticipatePin: 1,
           onUpdate: (self) => {
@@ -60,7 +67,23 @@ export function Transport() {
       for (let i = 0; i < N; i++) {
         const card = cardRefs.current[i]
         if (!card) continue
-        tl.to(card, { x: '150%', rotate: 14, duration: 1, ease: 'power2.in' }, i)
+
+        // The top card slides out and fades away completely — it must
+        // leave the visible screen, not just peek off the deck's edge.
+        tl.to(card, { x: '160%', rotate: 8, opacity: 0, duration: 0.8, ease: 'power1.inOut' }, i)
+
+        // The rest of the stack settles up by one depth level in the same
+        // beat, so it never "jumps" — it reads as the deck getting shorter.
+        for (let j = i + 1; j < cards.length; j++) {
+          const behind = cardRefs.current[j]
+          if (!behind) continue
+          const newDepth = Math.min(j - (i + 1), 3)
+          tl.to(
+            behind,
+            { y: newDepth * 7, scale: 1 - newDepth * 0.02, duration: 0.8, ease: 'power1.inOut' },
+            i
+          )
+        }
       }
 
       const onResize = () => ScrollTrigger.refresh()
@@ -168,7 +191,7 @@ export function Transport() {
       className="scroll-mt-24 overflow-hidden bg-background py-24 sm:py-32"
     >
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
-        <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
+        <div ref={pinRef} className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
           <SectionHeading
             eyebrow="Qué transportamos"
             title="Equipos pesados y cargas especiales, en manos expertas."
@@ -178,7 +201,7 @@ export function Transport() {
           {/* The deck */}
           <div
             ref={stageRef}
-            className="relative mx-auto aspect-[3/2] w-full max-w-md"
+            className="relative mx-auto aspect-[3/2] w-full max-w-md lg:max-w-xl"
           >
             {TRANSPORT_ITEMS.map((cat, i) => (
               <div
@@ -196,7 +219,7 @@ export function Transport() {
                       alt={`Transporte de ${cat.title.toLowerCase()}`}
                       fill
                       loading="lazy"
-                      sizes="(max-width: 640px) 90vw, 448px"
+                      sizes="(max-width: 640px) 90vw, 576px"
                       className="object-cover"
                     />
                   ) : (
