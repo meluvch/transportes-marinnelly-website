@@ -20,10 +20,10 @@ export default function Page() {
         <Clients />
         <Transport />
         <Coverage />
-        <Impact />
+        <Contact />
         <Commitment />
         <Fleet />
-        <Contact />
+        <Impact />
       </main>
       <SiteFooter />
     </>
