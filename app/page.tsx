@@ -9,6 +9,7 @@ import { Fleet } from '@/components/fleet'
 import { Coverage } from '@/components/coverage'
 import { Contact } from '@/components/contact'
 import { SiteFooter } from '@/components/site-footer'
+import { WhatsAppFloat } from '@/components/whatsapp-float'
 
 export default function Page() {
   return (
@@ -26,6 +27,7 @@ export default function Page() {
         <Impact />
       </main>
       <SiteFooter />
+      <WhatsAppFloat />
     </>
   )
 }
