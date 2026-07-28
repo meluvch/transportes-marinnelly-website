@@ -1,3 +1,5 @@
+import type { IconKey } from '@/components/icons/transport-icons'
+
 export const WHATSAPP_URL =
   'https://wa.me/5491163640392?text=Hola%20Guido!%20Quiero%20cotizar%20un%20traslado'
 
@@ -21,8 +23,12 @@ export type TransportItem = {
   slug: string
   title: string
   description: string
-  /** Longer copy shown in the expanded detail card. */
-  longDescription: string
+  /** The "Qué es" paragraph shown in the expanded detail card. */
+  about: string
+  /** The "Traslado:" copy — rendered next to the method/condition icons. */
+  transfer: string
+  /** Icons (with their own tooltip copy) shown alongside "Traslado:". */
+  transferIcons: { icon: IconKey; tooltip: string }[]
   /** Drop a real photo path here (e.g. '/transporte/excavadoras.jpg'). Leave '' to show the branded fallback. */
   image: string
 }
@@ -32,72 +38,122 @@ export const TRANSPORT_ITEMS: TransportItem[] = [
     slug: 'excavadoras',
     title: 'Excavadoras',
     description: 'Traslado seguro de excavadoras de cadenas y ruedas.',
-    longDescription:
-      'Excavadoras de cadenas y de ruedas, para obra vial, movimiento de suelo y demolición. Por su peso y el brazo/pluma que sobresale, el traslado requiere plancha baja y a veces desarme parcial del balde o la pluma para respetar altura y ancho de ruta.',
+    about:
+      'Excavadoras de cadenas y de ruedas, para obra vial, movimiento de suelo y demolición.',
+    transfer: 'en plancha hasta 14 toneladas. Si supera ese peso, se utiliza carretón.',
+    transferIcons: [
+      { icon: 'plancha', tooltip: 'Traslado en plancha (hasta 14 toneladas)' },
+      { icon: 'carreton', tooltip: 'Traslado en carretón (más de 14 toneladas)' },
+    ],
     image: '/transporte/excavadoras.jpg',
   },
   {
     slug: 'retroexcavadoras',
     title: 'Retroexcavadoras',
     description: 'Logística precisa para retroexcavadoras y mixtas.',
-    longDescription:
-      'Equipos mixtos (pala frontal + retro), muy usados en obras urbanas y rurales. Son más compactas que una excavadora grande, pero igual exigen amarre firme y cuidado en el descenso por su centro de gravedad alto.',
+    about:
+      'Equipo mixto (pala frontal + retro) que nos acompaña en el día a día. Su versatilidad lo hace ideal para trabajos en zonas urbanas o de difícil acceso.',
+    transfer: 'en plancha para equipos pesados. Si no puede autocargarse, se utiliza malacate.',
+    transferIcons: [
+      { icon: 'plancha', tooltip: 'Traslado en plancha para equipos pesados' },
+      { icon: 'malacate', tooltip: 'Uso de malacate si el equipo no puede autocargarse' },
+    ],
     image: '/transporte/retroexcavadoras.jpg',
   },
   {
     slug: 'motoniveladoras',
     title: 'Motoniveladoras',
     description: 'Transporte de motoniveladoras y equipo vial.',
-    longDescription:
-      'Equipo vial de gran longitud, usado para nivelación de caminos y terraplenes. Su hoja frontal y el largo total de la máquina piden un carretón extendido y planificación de ruta para curvas y cruces angostos.',
+    about: 'Equipo vial de gran longitud, usado para nivelación de caminos y terraplenes.',
+    transfer:
+      'en carretón extendido. Su hoja frontal y largo total requieren planificación de ruta para curvas y cruces angostos.',
+    transferIcons: [
+      { icon: 'carreton', tooltip: 'Traslado en carretón extendido' },
+      { icon: 'largo', tooltip: 'Requiere planificación de ruta por su longitud' },
+    ],
     image: '/transporte/motoniveladoras.jpg',
   },
   {
     slug: 'rodillos',
     title: 'Rodillos compactadores',
     description: 'Traslado de rodillos y compactadores de suelo.',
-    longDescription:
-      'Compactadores de suelo y asfalto, de distintos pesos según sean para obra vial o urbana. Suelen trasladarse en plancha por su bajo centro de gravedad, aunque el peso concentrado en poco espacio exige buen cálculo de la carga por eje.',
+    about:
+      'Compactadores de suelo y asfalto, de distintos pesos según sean para obra vial o urbana.',
+    transfer:
+      'en carretón si es doble pata de cabra (obligatorio). En plancha, se ayuda con malacate y requiere eje con goma trasero.',
+    transferIcons: [
+      { icon: 'carreton', tooltip: 'Traslado obligatorio en carretón (doble pata de cabra)' },
+      { icon: 'plancha', tooltip: 'Traslado en plancha con eje con goma trasero' },
+      { icon: 'malacate', tooltip: 'Se ayuda con malacate para la carga' },
+    ],
     image: '/transporte/rodillos.jpg',
   },
   {
     slug: 'gruas',
     title: 'Grúas',
     description: 'Movimiento de grúas y equipos de izaje.',
-    longDescription:
-      'Grúas móviles y equipos de izaje, desde modelos chicos hasta unidades de gran porte. El traslado varía mucho según el modelo: algunas viajan armadas, otras requieren desmontar la pluma o los contrapesos para cumplir con los límites de ruta.',
+    about: 'Grúas móviles y equipos de izaje, desde modelos chicos hasta unidades de gran porte.',
+    transfer:
+      'varía según el modelo, pudiendo ir aparejadas para aprovechar el viaje. Brazos articulados de más de 15 mtrs requieren carretón obligatoriamente.',
+    transferIcons: [
+      { icon: 'carreton', tooltip: 'Traslado obligatorio en carretón (brazos de más de 15 mtrs)' },
+      { icon: 'largo', tooltip: 'Según el largo del brazo articulado' },
+    ],
     image: '/transporte/gruas.jpg',
   },
   {
     slug: 'autoelevadores',
     title: 'Autoelevadores',
     description: 'Transporte de autoelevadores y equipos de carga.',
-    longDescription:
-      'Autoelevadores de uso industrial y logístico, de distintas capacidades de carga. Son relativamente compactos, pero por su peso concentrado adelante necesitan un amarre específico para el traslado.',
+    about: 'Autoelevadores de uso industrial y logístico, de distintas capacidades de carga.',
+    transfer:
+      'en plancha hasta 10 toneladas; por encima de ese peso, en carretón. Suelen contratarse ambas unidades cuando se necesita el carretón para carga palletizada y la plancha para llevar el autoelevador que realiza la carga en el otro camión.',
+    transferIcons: [
+      { icon: 'plancha', tooltip: 'Traslado en plancha (hasta 10 toneladas)' },
+      { icon: 'carreton', tooltip: 'Traslado en carretón (más de 10 toneladas)' },
+      { icon: 'peso', tooltip: 'Límite de peso según unidad' },
+    ],
     image: '/transporte/autoelevadores.jpg',
   },
   {
     slug: 'maquinaria-agricola',
     title: 'Maquinaria agrícola',
     description: 'Cosechadoras, tractores, sembradoras y pulverizadoras.',
-    longDescription:
-      'Cosechadoras, tractores, sembradoras y pulverizadoras. Muchas veces son cargas de ancho o alto considerable (cabezales, plataformas), por lo que suelen necesitar desarme parcial y permisos de carga especial según la ruta.',
+    about:
+      'Cosechadoras, tractores, sembradoras y pulverizadoras, propios de la época de cosecha.',
+    transfer:
+      'en carretón de 15 mtrs. Cargas de ancho o alto considerable (cabezales, plataformas) suelen requerir desarme parcial y permisos de carga especial según la ruta.',
+    transferIcons: [
+      { icon: 'carreton', tooltip: 'Traslado en carretón de 15 mtrs' },
+      { icon: 'permisos', tooltip: 'Requiere permisos de carga especial según la ruta' },
+      { icon: 'desarme', tooltip: 'Puede requerir desarme parcial de la unidad' },
+    ],
     image: '/transporte/maquinaria-agricola.jpg',
   },
   {
     slug: 'equipos-industriales',
     title: 'Equipos industriales',
     description: 'Maquinaria industrial y equipos de gran porte.',
-    longDescription:
-      'Maquinaria de planta e industria pesada: desde equipos de producción hasta estructuras de gran porte. Cada traslado se planifica a medida según el peso, las dimensiones y el punto exacto de carga y descarga.',
+    about:
+      'Maquinaria de planta e industria pesada: desde equipos de producción hasta estructuras de gran porte.',
+    transfer: 'se planifica a medida según el peso, las dimensiones y el punto exacto de carga y descarga.',
+    transferIcons: [
+      { icon: 'a-medida', tooltip: 'Traslado planificado a medida según cada caso' },
+    ],
     image: '/transporte/equipos-industriales.jpg',
   },
   {
     slug: 'cargas-especiales',
     title: 'Cargas especiales',
     description: 'Soluciones a medida para cargas fuera de norma.',
-    longDescription:
-      'Todo lo que no entra en las categorías anteriores: piezas fuera de norma, estructuras, equipos atípicos. Se coordina de forma personalizada: relevamiento previo, permisos especiales y, si hace falta, escolta.',
+    about:
+      'Todo lo que no entra en las categorías anteriores: piezas fuera de norma, estructuras, equipos atípicos.',
+    transfer:
+      'se coordina de forma personalizada: relevamiento previo, permisos especiales y, si hace falta, escolta.',
+    transferIcons: [
+      { icon: 'permisos', tooltip: 'Requiere permisos especiales' },
+      { icon: 'escolta', tooltip: 'Puede requerir escolta' },
+    ],
     image: '/transporte/cargas-especiales.jpg',
   },
 ]
@@ -144,29 +200,53 @@ export const COMMITMENTS = [
 export type FleetUnit = {
   slug: 'plancha' | 'carreton-15m' | 'carreton-cuello' | 'playo-balancin' | 'portacontenedor'
   name: string
-  capacity: string
+  specs: { icon: IconKey; label: string }[]
 }
 
 export const FLEET: FleetUnit[] = [
   {
     slug: 'plancha',
     name: 'Plancha hidráulica autodeslizante',
-    capacity: '14 toneladas',
+    specs: [
+      { icon: 'peso', label: 'Carga hasta 14 toneladas' },
+      { icon: 'largo', label: 'Dimensiones planchada: 8.00 x 2.60 mtrs' },
+      { icon: 'capas', label: 'Base de chapa semillada' },
+      { icon: 'malacate', label: 'Malacate para 10 toneladas' },
+      { icon: 'columnas', label: 'Opción con columnas laterales de contención' },
+      { icon: 'altura', label: '130 cm de piso a planchada' },
+    ],
   },
   {
     slug: 'carreton-15m',
-    name: 'Carretón de 15 metros',
-    capacity: '25 toneladas',
+    name: 'Carretón vial 3 ejes',
+    specs: [
+      { icon: 'peso', label: 'Carga hasta 25 toneladas' },
+      { icon: 'largo', label: 'Dimensiones planchada: 13.00 x 2.60 mtrs' },
+      { icon: 'largo', label: 'Dimensiones pecho: 2.50 x 2.60 mtrs' },
+      { icon: 'ancho-extensible', label: 'Ancho extensible a 3.20 mtrs' },
+      { icon: 'altura', label: '85 cm de piso a planchada' },
+    ],
   },
   {
     slug: 'carreton-cuello',
     name: 'Carretón cuello desmontable',
-    capacity: '40 toneladas',
+    specs: [
+      { icon: 'peso', label: 'Carga hasta 40 toneladas' },
+      { icon: 'largo', label: 'Dimensiones planchada: 9.00 x 2.60 mtrs' },
+      { icon: 'ancho-extensible', label: 'Ancho extensible a 3.20 mtrs' },
+      { icon: 'altura', label: '70 cm de piso a planchada' },
+    ],
   },
   {
     slug: 'playo-balancin',
     name: 'Camión playo balancín',
-    capacity: 'Cargas de gran longitud',
+    specs: [
+      { icon: 'peso', label: 'Carga hasta 14 toneladas' },
+      { icon: 'largo', label: 'Dimensiones planchada: 7.00 x 2.60 mtrs' },
+      { icon: 'pallets', label: 'Capacidad: 14 pallets' },
+      { icon: 'altura', label: '120 cm de piso a planchada' },
+      { icon: 'baranda', label: 'Baranda volcable' },
+    ],
   },
 ]
 

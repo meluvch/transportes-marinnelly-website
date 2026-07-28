@@ -6,6 +6,8 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowLeft, ArrowRight, MessageCircle, Truck, X } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
+import { IconTooltip } from '@/components/ui/icon-tooltip'
+import { ICONS, ICON_CATEGORY_STYLES, ICON_CATEGORY } from '@/components/icons/transport-icons'
 import { TRANSPORT_ITEMS, WHATSAPP_URL } from '@/lib/site'
 
 const N = TRANSPORT_ITEMS.length // 9 categories
@@ -322,9 +324,26 @@ export function Transport() {
                 <h2 className="font-display text-3xl font-semibold text-foreground sm:text-4xl">
                   {item.title}
                 </h2>
+                <p className="text-base leading-relaxed text-muted-foreground">{item.about}</p>
+
                 <p className="text-base leading-relaxed text-muted-foreground">
-                  {item.longDescription}
+                  <span className="font-semibold text-foreground">Traslado:</span> {item.transfer}
                 </p>
+
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {item.transferIcons.map(({ icon, tooltip }, iconIndex) => {
+                    const SpecIcon = ICONS[icon]
+                    return (
+                      <IconTooltip
+                        key={iconIndex}
+                        label={tooltip}
+                        className={`size-9 ${ICON_CATEGORY_STYLES[ICON_CATEGORY[icon]]}`}
+                      >
+                        <SpecIcon className="size-4.5" strokeWidth={1.7} />
+                      </IconTooltip>
+                    )
+                  })}
+                </div>
 
                 <a
                   href={`${WHATSAPP_URL}%20-%20${encodeURIComponent(item.title)}`}
