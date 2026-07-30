@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
+import { LOCATION } from '@/lib/site'
 import './globals.css'
 
 const inter = Inter({
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     template: '%s | Transporte y Logística Marinelly',
   },
   description:
-    'Transporte de maquinaria pesada y cargas especiales en toda Argentina. Excavadoras, retroexcavadoras, motoniveladoras, grúas, maquinaria agrícola e industrial. Base operativa en Bernal, Buenos Aires. Cobertura nacional.',
+    `Transporte de maquinaria pesada y cargas especiales en toda Argentina. Excavadoras, retroexcavadoras, motoniveladoras, grúas, maquinaria agrícola e industrial. Base operativa en ${LOCATION.base}, Buenos Aires. Cobertura nacional.`,
   keywords: [
     'transporte de maquinaria pesada',
     'transporte de cargas especiales',
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     'transporte de maquinaria industrial',
     'transporte de maquinaria vial',
     'logística Argentina',
-    'Bernal',
+    LOCATION.base,
   ],
   authors: [{ name: 'Transporte y Logística Marinelly' }],
   creator: 'Transporte y Logística Marinelly',
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
     siteName: 'Transporte y Logística Marinelly',
     title: 'Transporte y Logística Marinelly | Transporte de maquinaria pesada',
     description:
-      'Transporte de maquinaria pesada y cargas especiales en toda Argentina. Cobertura nacional con base operativa en Bernal, Buenos Aires.',
+      `Transporte de maquinaria pesada y cargas especiales en toda Argentina. Cobertura nacional con base operativa en ${LOCATION.base}, Buenos Aires.`,
   },
   twitter: {
     card: 'summary_large_image',
@@ -93,7 +94,7 @@ const jsonLd = {
   },
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Bernal',
+    addressLocality: LOCATION.base,
     addressRegion: 'Buenos Aires',
     addressCountry: 'AR',
   },
