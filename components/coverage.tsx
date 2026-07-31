@@ -33,8 +33,6 @@ export function Coverage() {
     neuquen: null,
     corrientes: null,
   })
-  const quilmesDotRef = useRef<SVGPathElement>(null)
-  const quilmesRingRef = useRef<SVGPathElement>(null)
   const gridSquareRefs = useRef<(SVGRectElement | null)[]>([])
 
   useEffect(() => {
@@ -50,30 +48,44 @@ export function Coverage() {
         scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
       })
 
-      // 2. Short pinned "camera push-in": the section holds at the top of the
-      // viewport for a small scroll distance (~3 wheel notches) while the
-      // map scales up slightly, then releases and the page continues as
-      // normal. Driven off a scroll-linked tween (scrub) on `scale` only —
-      // GPU-accelerated transform, no layout/paint cost — so it stays
-      // smooth on mobile too. Overlap with the text column while zoomed is
-      // intentional; the text sits in a higher stacking context so the map
-      // tucks visually behind it. Offset the pin start by the floating
-      // header's height (it's `fixed top-0`) so the section doesn't pin
-      // flush against the viewport edge and slide its heading under it.
-      gsap.fromTo(
-        mapWrapRef.current,
-        { scale: 1 },
-        {
-          scale: 1.1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top+=88',
-            end: '+=320',
-            pin: true,
-            scrub: 0.4,
-            anticipatePin: 1,
-          },
+      // 2. Short pinned "camera push-in": the section holds for a small
+      // scroll distance (~3 wheel notches) while the map scales up
+      // noticeably, then releases and the page continues as normal. Driven
+      // off a scroll-linked tween (scrub) on `scale` only — GPU-accelerated
+      // transform, no layout/paint cost — so it stays smooth on mobile too.
+      //
+      // The scroll trigger is the map itself (not the whole section): on
+      // mobile the text stacks above the map, so if the *section* were the
+      // trigger, "top top" would fire as soon as the (much taller) text
+      // block's top reached the header — pinning the section well before
+      // the map had scrolled into view, leaving it cut off below the fold.
+      // Using the map's own position guarantees it's what's actually
+      // visible when the pin engages, on both layouts. Overlap with the
+      // text column while zoomed is intentional/expected, especially on
+      // mobile where it's explicitly fine for the map to end up partly
+      // behind the text. The +=88 offset clears the floating `fixed top-0`
+      // header so nothing pins flush under it.
+      const mm = gsap.matchMedia()
+      mm.add(
+        { isDesktop: '(min-width: 1024px)', isMobile: '(max-width: 1023px)' },
+        (context) => {
+          const { isDesktop } = context.conditions as { isDesktop: boolean }
+          gsap.fromTo(
+            mapWrapRef.current,
+            { scale: 1 },
+            {
+              scale: isDesktop ? 1.35 : 1.55,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: mapWrapRef.current,
+                pin: sectionRef.current,
+                start: 'top top+=88',
+                end: '+=320',
+                scrub: 0.4,
+                anticipatePin: 1,
+              },
+            }
+          )
         }
       )
 
@@ -115,31 +127,7 @@ export function Coverage() {
         },
       })
 
-      // 4. Quilmes point: breathing scale + expanding ring.
-      // transformBox:'fill-box' (set via inline style below) is what keeps
-      // this centered on the dot itself instead of the SVG's own (0,0).
-      gsap.to(quilmesDotRef.current, {
-        scale: 1.05,
-        transformOrigin: '50% 50%',
-        duration: 1.4,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      })
-      gsap.fromTo(
-        quilmesRingRef.current,
-        { scale: 1, opacity: 0.55, transformOrigin: '50% 50%' },
-        {
-          scale: 2.4,
-          opacity: 0,
-          duration: 2,
-          repeat: -1,
-          ease: 'power2.out',
-          transformOrigin: '50% 50%',
-        }
-      )
-
-      // 5. Routes: a soft stagger entrance (fade + tiny scale-up) as the map
+      // 4. Routes: a soft stagger entrance (fade + tiny scale-up) as the map
       // scrolls into view, then a perpetual "traffic flowing" shimmer on
       // top of the always-visible solid line — it never disappears or
       // blinks, it just gets a moving highlight, like a route in motion.
@@ -311,20 +299,13 @@ export function Coverage() {
                 </g>
               ))}
 
+              {/* Quilmes marker: static, no animation of its own — it just
+                  scales along with the rest of the map during the pinned
+                  zoom (see effect #2 above). */}
               <rect {...MAP_RECTS.rect_quilmes} fill="white" stroke="#FF6B01" />
               <path d={MAP_PATHS.text_base_quilmes} fill="#FF6B01" />
-              <path
-                ref={quilmesRingRef}
-                d={MAP_PATHS.quilmes_ring}
-                fill="#FF6B01"
-                style={{ transformBox: 'fill-box' }}
-              />
-              <path
-                ref={quilmesDotRef}
-                d={MAP_PATHS.quilmes_dot}
-                fill="white"
-                style={{ transformBox: 'fill-box' }}
-              />
+              <path d={MAP_PATHS.quilmes_ring} fill="#FF6B01" />
+              <path d={MAP_PATHS.quilmes_dot} fill="white" />
             </svg>
           </div>
         </div>
