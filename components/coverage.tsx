@@ -48,44 +48,78 @@ export function Coverage() {
         scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
       })
 
-      // 2. Short pinned "camera push-in": the section holds for a small
-      // scroll distance (~3 wheel notches) while the map scales up
-      // noticeably, then releases and the page continues as normal. Driven
-      // off a scroll-linked tween (scrub) on `scale` only — GPU-accelerated
-      // transform, no layout/paint cost — so it stays smooth on mobile too.
+      // 2. Short pinned "camera push-in", tuned very differently per layout:
       //
-      // The scroll trigger is the map itself (not the whole section): on
-      // mobile the text stacks above the map, so if the *section* were the
-      // trigger, "top top" would fire as soon as the (much taller) text
-      // block's top reached the header — pinning the section well before
-      // the map had scrolled into view, leaving it cut off below the fold.
-      // Using the map's own position guarantees it's what's actually
-      // visible when the pin engages, on both layouts. Overlap with the
-      // text column while zoomed is intentional/expected, especially on
-      // mobile where it's explicitly fine for the map to end up partly
-      // behind the text. The +=88 offset clears the floating `fixed top-0`
-      // header so nothing pins flush under it.
+      // Desktop: text and map sit side by side, so the section is never
+      // much taller than the viewport. The pin triggers off the map's own
+      // position (not the section's) so it engages exactly when the map is
+      // in frame, then it simply scales up in place.
+      //
+      // Mobile: text stacks above the map, and the whole section is taller
+      // than one screen — so this is a different composition, not just a
+      // smaller version of the desktop one. The pin engages the moment the
+      // section itself enters (title + description visible immediately,
+      // per the brief), and the map is pulled up (negative y) at the same
+      // time it scales, tucking its top edge under the text/button so the
+      // *entire* scene — heading, copy and map together — fits in one
+      // viewport for the whole animation instead of the map trailing off
+      // below the fold. The Quilmes marker isn't touched here: it has no
+      // animation of its own (see the render below), so it rides along
+      // rigidly with the rest of the map instead of drifting independently.
       const mm = gsap.matchMedia()
       mm.add(
         { isDesktop: '(min-width: 1024px)', isMobile: '(max-width: 1023px)' },
         (context) => {
           const { isDesktop } = context.conditions as { isDesktop: boolean }
-          gsap.fromTo(
-            mapWrapRef.current,
-            { scale: 1 },
-            {
-              scale: isDesktop ? 1.35 : 1.55,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: mapWrapRef.current,
-                pin: sectionRef.current,
-                start: 'top top+=88',
-                end: '+=320',
-                scrub: 0.4,
-                anticipatePin: 1,
-              },
+          if (isDesktop) {
+            gsap.fromTo(
+              mapWrapRef.current,
+              { scale: 1 },
+              {
+                scale: 1.35,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: mapWrapRef.current,
+                  pin: sectionRef.current,
+                  start: 'top top+=88',
+                  end: '+=320',
+                  scrub: 0.4,
+                  anticipatePin: 1,
+                },
+              }
+            )
+          } else {
+            const mobilePinConfig = {
+              trigger: sectionRef.current,
+              start: 'top top+=64',
+              end: '+=360',
             }
-          )
+            // The upward tuck is set instantly the moment the pin engages
+            // (onEnter/onEnterBack), not scrubbed with scroll — the map
+            // needs to already be in its compact, fully-on-screen position
+            // from the very first pinned frame, otherwise it's still
+            // sitting at its natural (untucked) height for part of the
+            // scroll and gets clipped by the viewport before a gradual tuck
+            // would catch up. The zoom itself is the only thing that
+            // scrubs smoothly across the pin's scroll range.
+            ScrollTrigger.create({
+              ...mobilePinConfig,
+              pin: true,
+              anticipatePin: 1,
+              onEnter: () => gsap.set(mapWrapRef.current, { y: -130 }),
+              onEnterBack: () => gsap.set(mapWrapRef.current, { y: -130 }),
+              onLeaveBack: () => gsap.set(mapWrapRef.current, { y: 0 }),
+            })
+            gsap.fromTo(
+              mapWrapRef.current,
+              { scale: 1 },
+              {
+                scale: 1.35,
+                ease: 'none',
+                scrollTrigger: { ...mobilePinConfig, scrub: 0.4 },
+              }
+            )
+          }
         }
       )
 
@@ -180,18 +214,18 @@ export function Coverage() {
     <section
       id="cobertura"
       ref={sectionRef}
-      className="scroll-mt-24 overflow-hidden bg-neutral-50 py-20 sm:py-28"
+      className="scroll-mt-24 overflow-hidden bg-neutral-50 py-12 lg:py-28"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid items-center gap-14 lg:grid-cols-[0.8fr_1.5fr] lg:gap-12">
-          <div className="relative z-10 flex flex-col gap-8">
+        <div className="grid items-center gap-6 lg:grid-cols-[0.8fr_1.5fr] lg:gap-12">
+          <div className="relative z-10 flex flex-col gap-5 lg:gap-8">
             <SectionHeading
               eyebrow="Cobertura"
               title="Operamos en todo el país."
               description="Llegamos a cualquier punto de Argentina. Zona de Quilmes, Buenos Aires es nuestra base operativa, pero tu proyecto puede estar donde sea."
             />
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2 lg:gap-4">
               <div className="flex items-center gap-3">
                 <span className="flex size-8 items-center justify-center rounded-full bg-brand/10 text-brand">
                   <MapPin className="size-4" />
@@ -230,7 +264,7 @@ export function Coverage() {
           {/* Map — single responsive SVG, no raster image. */}
           <div
             ref={mapWrapRef}
-            className="relative z-0 mx-auto w-full max-w-[560px] will-change-transform lg:max-w-none"
+            className="relative z-0 mx-auto w-full max-w-[280px] will-change-transform sm:max-w-[380px] lg:max-w-none"
           >
             <svg
               viewBox="0 0 560 368"
