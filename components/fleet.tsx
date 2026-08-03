@@ -146,7 +146,7 @@ export function Fleet() {
         />
 
         {/* 4 units, 2 columns x 2 rows */}
-        <ul className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <ul className="mt-12 grid grid-cols-1 items-start gap-5 sm:grid-cols-2">
           {FLEET.map((unit, i) => (
             <FleetCard key={unit.name} unit={unit} index={i} />
           ))}
