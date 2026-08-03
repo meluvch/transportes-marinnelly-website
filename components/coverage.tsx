@@ -48,80 +48,31 @@ export function Coverage() {
         scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
       })
 
-      // 2. Short pinned "camera push-in", tuned very differently per layout:
-      //
-      // Desktop: text and map sit side by side, so the section is never
-      // much taller than the viewport. The pin triggers off the map's own
-      // position (not the section's) so it engages exactly when the map is
-      // in frame, then it simply scales up in place.
-      //
-      // Mobile: text stacks above the map, and the whole section is taller
-      // than one screen — so this is a different composition, not just a
-      // smaller version of the desktop one. The pin engages the moment the
-      // section itself enters (title + description visible immediately,
-      // per the brief), and the map is pulled up (negative y) at the same
-      // time it scales, tucking its top edge under the text/button so the
-      // *entire* scene — heading, copy and map together — fits in one
-      // viewport for the whole animation instead of the map trailing off
-      // below the fold. The Quilmes marker isn't touched here: it has no
-      // animation of its own (see the render below), so it rides along
-      // rigidly with the rest of the map instead of drifting independently.
+      // 2. Short pinned "camera push-in" — desktop only. On mobile it felt
+      // stuck/janky (the pin fighting momentum scrolling), so mobile gets a
+      // large static map instead, no scroll animation (see its sizing in
+      // the render below). The pin triggers off the map's own position
+      // (not the section's) so it engages exactly when the map is in
+      // frame, then it simply scales up in place.
       const mm = gsap.matchMedia()
-      mm.add(
-        { isDesktop: '(min-width: 1024px)', isMobile: '(max-width: 1023px)' },
-        (context) => {
-          const { isDesktop } = context.conditions as { isDesktop: boolean }
-          if (isDesktop) {
-            gsap.fromTo(
-              mapWrapRef.current,
-              { scale: 1 },
-              {
-                scale: 1.35,
-                ease: 'none',
-                scrollTrigger: {
-                  trigger: mapWrapRef.current,
-                  pin: sectionRef.current,
-                  start: 'top top+=88',
-                  end: '+=320',
-                  scrub: 0.4,
-                  anticipatePin: 1,
-                },
-              }
-            )
-          } else {
-            const mobilePinConfig = {
-              trigger: sectionRef.current,
-              start: 'top top+=64',
-              end: '+=360',
-            }
-            // The upward tuck is set instantly the moment the pin engages
-            // (onEnter/onEnterBack), not scrubbed with scroll — the map
-            // needs to already be in its compact, fully-on-screen position
-            // from the very first pinned frame, otherwise it's still
-            // sitting at its natural (untucked) height for part of the
-            // scroll and gets clipped by the viewport before a gradual tuck
-            // would catch up. The zoom itself is the only thing that
-            // scrubs smoothly across the pin's scroll range.
-            ScrollTrigger.create({
-              ...mobilePinConfig,
-              pin: true,
+      mm.add('(min-width: 1024px)', () => {
+        gsap.fromTo(
+          mapWrapRef.current,
+          { scale: 1 },
+          {
+            scale: 1.35,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: mapWrapRef.current,
+              pin: sectionRef.current,
+              start: 'top top+=88',
+              end: '+=320',
+              scrub: 0.4,
               anticipatePin: 1,
-              onEnter: () => gsap.set(mapWrapRef.current, { y: -130 }),
-              onEnterBack: () => gsap.set(mapWrapRef.current, { y: -130 }),
-              onLeaveBack: () => gsap.set(mapWrapRef.current, { y: 0 }),
-            })
-            gsap.fromTo(
-              mapWrapRef.current,
-              { scale: 1 },
-              {
-                scale: 1.35,
-                ease: 'none',
-                scrollTrigger: { ...mobilePinConfig, scrub: 0.4 },
-              }
-            )
+            },
           }
-        }
-      )
+        )
+      })
 
       // 3. Background grid: a single scroll-free driver computes every
       // square's opacity each frame from its distance + angle to the grid's
@@ -214,9 +165,9 @@ export function Coverage() {
     <section
       id="cobertura"
       ref={sectionRef}
-      className="scroll-mt-24 overflow-hidden bg-neutral-50 py-12 lg:py-28"
+      className="scroll-mt-24 flex min-h-dvh flex-col justify-center overflow-hidden bg-neutral-50 py-12 lg:min-h-0 lg:py-28"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
         <div className="grid items-center gap-6 lg:grid-cols-[0.8fr_1.5fr] lg:gap-12">
           <div className="relative z-10 flex flex-col gap-5 lg:gap-8">
             <SectionHeading
@@ -261,10 +212,15 @@ export function Coverage() {
             </a>
           </div>
 
-          {/* Map — single responsive SVG, no raster image. */}
+          {/* Map — single responsive SVG, no raster image. On mobile it's
+              deliberately oversized and allowed to bleed past both the
+              section's sides (clipped by overflow-hidden above, which is
+              fine) and up under the text block above it, so it reads as a
+              big, confident background element instead of a boxed-in
+              diagram. No scroll animation on mobile — see effect #2. */}
           <div
             ref={mapWrapRef}
-            className="relative z-0 mx-auto w-full max-w-[280px] will-change-transform sm:max-w-[380px] lg:max-w-none"
+            className="relative z-0 -mt-10 ml-[-14%] w-[128%] max-w-none will-change-transform sm:ml-[-6%] sm:w-[112%] lg:mx-auto lg:mt-0 lg:w-full lg:max-w-none"
           >
             <svg
               viewBox="0 0 560 368"
