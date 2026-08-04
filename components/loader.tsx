@@ -4,9 +4,10 @@ import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-// An asymmetric swoosh — eases into a shallow dip, then sweeps up with
-// gathering momentum, instead of a repeating, symmetric wave.
-const ROUTE_PATH = 'M 20 118 C 76 156, 132 156, 176 118 C 244 62, 322 12, 412 34'
+// A winding route — dips, crests, dips again, then sweeps up with
+// gathering momentum, instead of a single shallow swoosh.
+const ROUTE_PATH =
+  'M 12 90 C 50 150, 95 150, 135 90 C 175 30, 215 30, 255 90 C 290 145, 320 145, 350 95 C 372 60, 390 35, 415 15'
 const DRAW_DURATION = 1.9
 const DRAW_EASE = [0.65, 0, 0.35, 1] as const
 
@@ -52,7 +53,7 @@ export function Loader() {
               <motion.path
                 d={ROUTE_PATH}
                 stroke="var(--border)"
-                strokeWidth="2"
+                strokeWidth="4"
                 strokeLinecap="round"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -63,7 +64,7 @@ export function Loader() {
               <motion.path
                 d={ROUTE_PATH}
                 stroke="var(--brand)"
-                strokeWidth="2.5"
+                strokeWidth="8"
                 strokeLinecap="round"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
@@ -72,7 +73,7 @@ export function Loader() {
 
               {/* traveling marker */}
               <motion.circle
-                r="5"
+                r="7"
                 fill="var(--brand)"
                 initial={{ offsetDistance: '0%', scale: 0.6 }}
                 animate={{ offsetDistance: '100%', scale: 1 }}
