@@ -155,8 +155,9 @@ export function Transport() {
 
       e.preventDefault()
       wasDraggingRef.current = true
-      // Drag left (dx < 0) advances the deck, same as scrolling down.
-      window.scrollTo(0, startScrollY - dx)
+      // Drag right (dx > 0) advances the deck, matching the direction the
+      // top card itself flies off in (x: '160%') — same as scrolling down.
+      window.scrollTo(0, startScrollY + dx)
     }
 
     function onPointerUp(e: PointerEvent) {
