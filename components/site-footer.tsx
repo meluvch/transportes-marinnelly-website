@@ -1,5 +1,13 @@
 import Image from 'next/image'
-import { EMAIL, EMAIL_HREF, LOCATION, NAV_LINKS, WHATSAPP_URL } from '@/lib/site'
+import {
+  EMAIL,
+  EMAIL_HREF,
+  LOCATION,
+  NAV_LINKS,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  WHATSAPP_URL,
+} from '@/lib/site'
 
 export function SiteFooter() {
   return (
@@ -52,6 +60,14 @@ export function SiteFooter() {
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     WhatsApp
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={PHONE_HREF}
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {PHONE_DISPLAY}
                   </a>
                 </li>
                 <li>

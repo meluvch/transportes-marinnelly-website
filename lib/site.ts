@@ -3,6 +3,13 @@ import type { IconKey } from '@/components/icons/transport-icons'
 export const WHATSAPP_URL =
   'https://wa.me/5491163640392?text=Hola%20Guido!%20Quiero%20cotizar%20un%20traslado'
 
+// Human-readable form of the same number used in WHATSAPP_URL — kept as
+// visible page text (not just inside a wa.me href) so it reads as a real
+// phone number to both visitors and search engines, matching the
+// telephone field in the JSON-LD.
+export const PHONE_DISPLAY = '+54 9 11 6364-0392'
+export const PHONE_HREF = 'tel:+5491163640392'
+
 export const EMAIL = 'contacto@transportesmarinelly.com.ar'
 export const EMAIL_HREF = `mailto:${EMAIL}`
 

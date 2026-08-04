@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
-import { LOCATION } from '@/lib/site'
+import { LOCATION, TRANSPORT_ITEMS } from '@/lib/site'
 import './globals.css'
 
 const inter = Inter({
@@ -83,7 +83,14 @@ export const viewport: Viewport = {
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'MovingCompany',
+  // schema.org has no dedicated "freight/heavy-haul trucking" type, and
+  // MovingCompany's own description ("a moving company") leans toward
+  // household/office relocation rather than machinery transport. Listing
+  // both types keeps the closest specific match (MovingCompany) while
+  // guaranteeing generic LocalBusiness recognition (what actually drives
+  // Google's local-pack/map eligibility) even if a parser doesn't resolve
+  // MovingCompany's own inheritance from LocalBusiness.
+  '@type': ['MovingCompany', 'LocalBusiness'],
   name: 'Transporte y Logística Marinelly',
   description:
     'Transporte de maquinaria pesada y cargas especiales en toda Argentina.',
@@ -92,16 +99,28 @@ const jsonLd = {
   image: `${SITE_URL}/logo-marinelly.png`,
   email: 'contacto@transportesmarinelly.com.ar',
   telephone: '+5491163640392',
-  areaServed: {
-    '@type': 'Country',
-    name: 'Argentina',
-  },
+  // The site publicly states nationwide coverage plus named frequent routes
+  // (see Coverage section) — both captured here rather than only the
+  // country-level entry.
+  areaServed: [
+    { '@type': 'Country', name: 'Argentina' },
+    { '@type': 'State', name: 'Buenos Aires' },
+    { '@type': 'State', name: 'Córdoba' },
+    { '@type': 'State', name: 'Mendoza' },
+    { '@type': 'State', name: 'Neuquén' },
+    { '@type': 'State', name: 'Corrientes' },
+  ],
   address: {
     '@type': 'PostalAddress',
     addressLocality: LOCATION.base,
     addressRegion: 'Buenos Aires',
     addressCountry: 'AR',
   },
+  // RECOMMENDATION: these are approximate coordinates for Quilmes' city
+  // center, not a verified pin for this specific business — the site
+  // doesn't publish a street address (common for operators without a
+  // public-facing yard). Once there's a real Google Business Profile /
+  // Maps pin, swap these for its exact coordinates instead.
   geo: {
     '@type': 'GeoCoordinates',
     latitude: -34.7203,
@@ -113,6 +132,22 @@ const jsonLd = {
     'Transporte de maquinaria agrícola',
     'Transporte de maquinaria vial',
   ],
+  // One Service entry per category actually offered (from the same data
+  // that drives the "Qué transportamos" section) — gives search engines
+  // and AI answer engines a concrete service list instead of just a
+  // one-line description.
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Categorías de transporte',
+    itemListElement: TRANSPORT_ITEMS.map((item) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: item.title,
+        description: item.description,
+      },
+    })),
+  },
 }
 
 export default function RootLayout({
