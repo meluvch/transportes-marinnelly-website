@@ -219,6 +219,29 @@ export function Transport() {
     }
   }
 
+  // Escape closes the reader, and focus moves into it on open and back to
+  // the triggering card on close — standard dialog keyboard behavior.
+  useEffect(() => {
+    if (openIndex === null) return
+
+    const triggerEl = cardRefs.current[openIndex]
+    const closeButton = overlayCardRef.current?.querySelector<HTMLButtonElement>(
+      '[aria-label="Volver"]'
+    )
+    closeButton?.focus()
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeReader()
+    }
+    document.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      triggerEl?.focus()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openIndex])
+
   useEffect(() => {
     if (openIndex === null || !sourceRect || !overlayCardRef.current) return
     document.body.style.overflow = 'hidden'
@@ -300,7 +323,20 @@ export function Transport() {
                   cardRefs.current[i] = el
                 }}
                 onClick={() => openCategory(i)}
-                className="absolute inset-0 flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-lg"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    openCategory(i)
+                  }
+                }}
+                role="button"
+                // Only the card currently on top of the stack is a real tab
+                // stop — the rest are visually behind it (z-index stacked),
+                // so leaving them all focusable would let Tab land on cards
+                // the user can't see yet.
+                tabIndex={i === activeIndex ? 0 : -1}
+                aria-label={`Ver detalle de ${cat.title}`}
+                className="absolute inset-0 flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               >
                 <div className="relative flex-1 overflow-hidden bg-neutral-900">
                   {cat.image ? (
@@ -362,6 +398,9 @@ export function Transport() {
           />
           <div
             ref={overlayCardRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={item.title}
             className="fixed z-[60] flex flex-col overflow-hidden bg-background shadow-2xl"
           >
             <div ref={overlayContentRef} className="flex h-full flex-col overflow-y-auto">
@@ -371,6 +410,7 @@ export function Transport() {
                     src={item.image || '/placeholder.svg'}
                     alt={`Transporte de ${item.title.toLowerCase()}`}
                     fill
+                    sizes="100vw"
                     className="object-cover"
                   />
                 ) : (

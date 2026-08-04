@@ -24,8 +24,10 @@ export const metadata: Metadata = {
     default: 'Transporte y Logística Marinelly | Transporte de maquinaria pesada',
     template: '%s | Transporte y Logística Marinelly',
   },
+  // Kept to ~150 chars — past ~155-160, Google truncates the snippet
+  // mid-sentence with "…" instead of showing what we actually wrote.
   description:
-    `Transporte de maquinaria pesada y cargas especiales en toda Argentina. Excavadoras, retroexcavadoras, motoniveladoras, grúas, maquinaria agrícola e industrial. Base operativa en ${LOCATION.base}, Buenos Aires. Cobertura nacional.`,
+    `Transporte de maquinaria pesada y cargas especiales en toda Argentina. Excavadoras, grúas y equipos industriales. Base en ${LOCATION.base}, cobertura nacional.`,
   keywords: [
     'transporte de maquinaria pesada',
     'transporte de cargas especiales',
@@ -86,6 +88,8 @@ const jsonLd = {
   description:
     'Transporte de maquinaria pesada y cargas especiales en toda Argentina.',
   url: SITE_URL,
+  logo: `${SITE_URL}/logo-marinelly.png`,
+  image: `${SITE_URL}/logo-marinelly.png`,
   email: 'contacto@transportesmarinelly.com.ar',
   telephone: '+5491163640392',
   areaServed: {
@@ -97,6 +101,11 @@ const jsonLd = {
     addressLocality: LOCATION.base,
     addressRegion: 'Buenos Aires',
     addressCountry: 'AR',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: -34.7203,
+    longitude: -58.2545,
   },
   knowsAbout: [
     'Transporte de maquinaria pesada',

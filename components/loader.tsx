@@ -14,6 +14,14 @@ const DRAW_EASE = [0.65, 0, 0.35, 1] as const
 export function Loader() {
   const [done, setDone] = useState(false)
 
+  // RECOMMENDATION (not applied — this is a deliberate brand-intro moment,
+  // not a bug, so changing it is a design call rather than a technical fix):
+  // every first-time visitor is blocked from the page for a fixed 2.5s while
+  // this plays, on every device including slow mobile connections. Worth
+  // considering either shortening it, skipping it on repeat visits in the
+  // same session (sessionStorage flag), or respecting
+  // `prefers-reduced-motion` by resolving `done` immediately for users who
+  // have that OS setting on.
   useEffect(() => {
     // Lock scroll while the intro plays
     const prev = document.body.style.overflow

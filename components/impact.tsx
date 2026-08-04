@@ -32,7 +32,7 @@ export function Impact() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 lg:px-8">
-        <motion.p
+        <motion.h2
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
@@ -41,7 +41,7 @@ export function Impact() {
         >
           Cada traslado es una responsabilidad.
           <span className="block text-white/55">No una carga más.</span>
-        </motion.p>
+        </motion.h2>
       </div>
     </section>
   )

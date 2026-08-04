@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import { ArrowRight, ArrowDown } from 'lucide-react'
 import { WHATSAPP_URL } from '@/lib/site'
@@ -7,6 +8,27 @@ import { WHATSAPP_URL } from '@/lib/site'
 const ease = [0.16, 1, 0.3, 1] as const
 
 export function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const mql = window.matchMedia('(min-width: 768px)')
+
+    const setSource = () => {
+      const src = mql.matches ? '/hero.mp4' : '/hero-mobile.mp4'
+      if (video.currentSrc.endsWith(src)) return
+      video.src = src
+      video.load()
+      video.play().catch(() => {})
+    }
+
+    setSource()
+    mql.addEventListener('change', setSource)
+    return () => mql.removeEventListener('change', setSource)
+  }, [])
+
   return (
     <section
       id="inicio"
@@ -19,30 +41,26 @@ export function Hero() {
           <div className="absolute right-0 top-1/4 h-64 w-64 translate-x-1/3 rounded-full bg-brand/20 blur-3xl" />
         </div>
 
-        {/* Background video — a vertical cut for mobile, the wide cut
-            everywhere else. Two separate <video> elements toggled with CSS,
-            not a single <video> with two <source media="...">: browsers only
-            evaluate a <source>'s media query once, when that video first
-            picks a resource — not reactively on resize/orientation change —
-            so it could get "stuck" on whichever cut matched at that one
-            moment (e.g. before the viewport had settled on load), regardless
-            of the actual screen size. CSS display toggling re-evaluates on
-            every resize like any other layout, so this can't happen. */}
+        {/* Background video — a vertical cut for mobile, a wide cut for
+            tablet/desktop. Picked client-side via matchMedia (in the effect
+            above) instead of two <video> tags toggled with CSS or a single
+            <video> with two <source media="...">: CSS `display:none` doesn't
+            stop a <video src> from being fetched, so the old two-tag markup
+            downloaded BOTH cuts on every device (~3x the mobile payload).
+            <source media> has the opposite problem — it's only evaluated
+            once, on first resource selection, so it can get stuck on the
+            wrong cut across a resize. Setting `src` imperatively re-evaluates
+            on every viewport-crossing resize and only ever fetches one file.
+            No `src` on first render, so SSR/hydration never requests either
+            video — the "Branded backdrop" div above covers that instant. */}
         <video
-          className="absolute inset-0 h-full w-full object-cover md:hidden"
+          ref={videoRef}
+          className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
           loop
           playsInline
-          src="/hero-mobile.mp4"
-        />
-        <video
-          className="absolute inset-0 hidden h-full w-full object-cover md:block"
-          autoPlay
-          muted
-          loop
-          playsInline
-          src="/hero.mp4"
+          aria-hidden="true"
         />
 
         {/* Contrast overlays — darker on the left where the text sits */}

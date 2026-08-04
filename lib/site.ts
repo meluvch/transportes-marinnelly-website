@@ -198,6 +198,9 @@ export const COMMITMENTS = [
 ]
 
 export type FleetUnit = {
+  // 'portacontenedor' has no entry in FLEET yet (and no case in
+  // UNIT_ICONS/components/fleet.tsx) — kept in the union as scaffolding for
+  // when that unit is added to the fleet, not currently rendered anywhere.
   slug: 'plancha' | 'carreton-15m' | 'carreton-cuello' | 'playo-balancin' | 'portacontenedor'
   name: string
   specs: { icon: IconKey; label: string }[]

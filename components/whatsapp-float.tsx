@@ -1,6 +1,6 @@
 'use client'
 
-import type { SVGProps } from 'react'
+import { useEffect, useState, type SVGProps } from 'react'
 import { motion } from 'motion/react'
 import { WHATSAPP_URL } from '@/lib/site'
 
@@ -13,15 +13,45 @@ function WhatsAppIcon(props: SVGProps<SVGSVGElement>) {
 }
 
 export function WhatsAppFloat() {
+  // The Contact section has its own prominent WhatsApp CTA (and the form
+  // below it), sitting in that same bottom-right corner on mobile — fade
+  // the float out there so it doesn't visually collide with the submit
+  // button, instead of unmounting it (which would replay the slow entrance
+  // delay below every time the user scrolls back out of that section).
+  const [inContact, setInContact] = useState(false)
+  const [hasAppeared, setHasAppeared] = useState(false)
+
+  useEffect(() => {
+    const target = document.getElementById('contacto')
+    if (!target) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInContact(entry.isIntersecting),
+      { threshold: 0.15 }
+    )
+    observer.observe(target)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <motion.a
       href={WHATSAPP_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chatear por WhatsApp"
+      aria-hidden={inContact}
+      tabIndex={inContact ? -1 : 0}
       initial={{ opacity: 0, scale: 0.4, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay: 2.7, duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+      animate={
+        inContact ? { opacity: 0, scale: 0.4, y: 20 } : { opacity: 1, scale: 1, y: 0 }
+      }
+      onAnimationComplete={() => setHasAppeared(true)}
+      transition={{
+        delay: hasAppeared ? 0 : 2.7,
+        duration: hasAppeared ? 0.25 : 0.5,
+        ease: [0.34, 1.56, 0.64, 1],
+      }}
+      style={{ pointerEvents: inContact ? 'none' : 'auto' }}
       className="fixed bottom-5 right-5 z-40 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/25 transition-transform duration-200 hover:scale-110 sm:bottom-8 sm:right-8"
     >
       <span
