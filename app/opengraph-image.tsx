@@ -5,7 +5,7 @@ import { join } from 'path'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 export const alt =
-  'Transporte y Logística Marinelly — Transporte de maquinaria pesada y cargas especiales en toda Argentina'
+  'Transportes Marinelly — Transporte y logística de maquinaria pesada y cargas especiales en toda Argentina'
 
 // Reuses the real logo (white background + orange wordmark, exactly how it
 // appears in the header/footer) instead of inventing new social-card
@@ -39,7 +39,18 @@ export default async function OpengraphImage() {
             textAlign: 'center',
           }}
         >
-          Transporte de maquinaria pesada y cargas especiales
+          Transporte y logística
+        </div>
+        <div
+          style={{
+            marginTop: 10,
+            fontSize: 32,
+            color: '#57534e',
+            fontFamily: 'sans-serif',
+            textAlign: 'center',
+          }}
+        >
+          de maquinaria pesada y cargas especiales
         </div>
         <div
           style={{

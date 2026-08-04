@@ -60,11 +60,11 @@ export function SiteHeader() {
         <a
           href="#inicio"
           className="flex items-center"
-          aria-label="Transporte y Logística Marinelly - Inicio"
+          aria-label="Transportes Marinelly - Inicio"
         >
           <Image
             src="/logo-marinelly.png"
-            alt="Transporte y Logística Marinelly"
+            alt="Transportes Marinelly"
             width={180}
             height={60}
             priority
@@ -122,7 +122,7 @@ export function SiteHeader() {
           <div className="flex h-16 items-center justify-between px-6">
             <Image
               src="/logo-marinelly.png"
-              alt="Transporte y Logística Marinelly"
+              alt="Transportes Marinelly"
               width={180}
               height={60}
               className="h-9 w-auto"

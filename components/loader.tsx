@@ -100,7 +100,7 @@ export function Loader() {
             >
               <Image
                 src="/logo-marinelly.png"
-                alt="Transporte y Logística Marinelly"
+                alt="Transportes Marinelly"
                 width={180}
                 height={60}
                 priority

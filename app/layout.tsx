@@ -21,16 +21,19 @@ const SITE_URL = 'https://www.transportesmarinelly.com.ar'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Transporte y Logística Marinelly | Transporte de maquinaria pesada',
-    template: '%s | Transporte y Logística Marinelly',
+    default: 'Transportes Marinelly | Transporte de Maquinaria Pesada',
+    template: '%s | Transportes Marinelly',
   },
-  // Kept to ~150 chars — past ~155-160, Google truncates the snippet
-  // mid-sentence with "…" instead of showing what we actually wrote.
+  // Brand name kept short and consistent ("Transportes Marinelly"); the
+  // descriptive keywords (transporte, logística, cargas especiales,
+  // industrial) live in the copy around it instead of inside the name
+  // itself — kept to ~150 chars so Google doesn't truncate the snippet.
   description:
-    `Transporte de maquinaria pesada y cargas especiales en toda Argentina. Excavadoras, grúas y equipos industriales. Base en ${LOCATION.base}, cobertura nacional.`,
+    `Transportes Marinelly: transporte y logística de maquinaria pesada, cargas especiales y equipos industriales en toda Argentina. Cobertura nacional.`,
   keywords: [
     'transporte de maquinaria pesada',
     'transporte de cargas especiales',
+    'transporte industrial',
     'transporte de excavadoras',
     'transporte de retroexcavadoras',
     'transporte de motoniveladoras',
@@ -38,11 +41,12 @@ export const metadata: Metadata = {
     'transporte de maquinaria agrícola',
     'transporte de maquinaria industrial',
     'transporte de maquinaria vial',
+    'logística de cargas especiales',
     'logística Argentina',
     LOCATION.base,
   ],
-  authors: [{ name: 'Transporte y Logística Marinelly' }],
-  creator: 'Transporte y Logística Marinelly',
+  authors: [{ name: 'Transportes Marinelly' }],
+  creator: 'Transportes Marinelly',
   alternates: {
     canonical: '/',
   },
@@ -60,16 +64,16 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_AR',
     url: SITE_URL,
-    siteName: 'Transporte y Logística Marinelly',
-    title: 'Transporte y Logística Marinelly | Transporte de maquinaria pesada',
+    siteName: 'Transportes Marinelly',
+    title: 'Transportes Marinelly | Transporte de Maquinaria Pesada',
     description:
-      `Transporte de maquinaria pesada y cargas especiales en toda Argentina. Cobertura nacional con base operativa en ${LOCATION.base}, Buenos Aires.`,
+      `Transporte y logística de maquinaria pesada y cargas especiales en toda Argentina. Cobertura nacional con base operativa en ${LOCATION.base}, Buenos Aires.`,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Transporte y Logística Marinelly',
+    title: 'Transportes Marinelly',
     description:
-      'Transporte de maquinaria pesada y cargas especiales en toda Argentina. Cobertura nacional.',
+      'Transporte y logística de maquinaria pesada, cargas especiales y equipos industriales en toda Argentina. Cobertura nacional.',
   },
   generator: 'v0.app',
 }
@@ -91,9 +95,13 @@ const jsonLd = {
   // Google's local-pack/map eligibility) even if a parser doesn't resolve
   // MovingCompany's own inheritance from LocalBusiness.
   '@type': ['MovingCompany', 'LocalBusiness'],
-  name: 'Transporte y Logística Marinelly',
+  name: 'Transportes Marinelly',
+  // Descriptive form some existing citations/searches may still use — kept
+  // as alternateName (not the primary name) so it stays associated with
+  // the same entity without fragmenting the brand shown to users.
+  alternateName: 'Transporte y Logística Marinelly',
   description:
-    'Transporte de maquinaria pesada y cargas especiales en toda Argentina.',
+    'Transporte y logística de maquinaria pesada, cargas especiales y equipos industriales en toda Argentina.',
   url: SITE_URL,
   logo: `${SITE_URL}/logo-marinelly.png`,
   image: `${SITE_URL}/logo-marinelly.png`,
@@ -131,6 +139,8 @@ const jsonLd = {
     'Transporte de cargas especiales',
     'Transporte de maquinaria agrícola',
     'Transporte de maquinaria vial',
+    'Transporte industrial',
+    'Logística de maquinaria pesada',
   ],
   // One Service entry per category actually offered (from the same data
   // that drives the "Qué transportamos" section) — gives search engines
