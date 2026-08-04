@@ -30,6 +30,10 @@ export function Transport() {
   const overlayCardRef = useRef<HTMLDivElement>(null)
   const overlayContentRef = useRef<HTMLDivElement>(null)
 
+  // Horizontal drag/swipe on the deck feeds the exact same scroll position
+  // the vertical gesture does — see the drag effect below.
+  const wasDraggingRef = useRef(false)
+
   // --- Deck: pinned scroll, top card slides away to the right each step ---
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
@@ -103,8 +107,85 @@ export function Transport() {
     return () => ctx.revert()
   }, [])
 
+  // --- Horizontal drag/swipe on the deck: usability testing showed people
+  // instinctively try to swipe the cards sideways. Rather than building a
+  // second, parallel "deck position" that then has to be kept in sync with
+  // the scroll-driven one, a horizontal drag is simply translated into the
+  // same vertical scroll position the pinned ScrollTrigger above already
+  // reads from — so both gestures always drive the exact same timeline,
+  // with the same scrub smoothing, and can never drift apart.
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage) return
+
+    let active = false
+    let startX = 0
+    let startY = 0
+    let startScrollY = 0
+    let isHorizontal: boolean | null = null
+
+    const DIRECTION_THRESHOLD = 8 // px before committing to horizontal vs vertical
+
+    function onPointerDown(e: PointerEvent) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      active = true
+      isHorizontal = null
+      startX = e.clientX
+      startY = e.clientY
+      startScrollY = window.scrollY
+      // Capturing here unconditionally would redirect the eventual
+      // mouseup/click to the stage for every plain tap too (Chrome
+      // redirects the compatibility mouse events along with the pointer
+      // ones), silently breaking "tap a card to open it". Only claim the
+      // pointer once a drag is actually confirmed, below.
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      if (!active) return
+      const dx = e.clientX - startX
+      const dy = e.clientY - startY
+
+      if (isHorizontal === null) {
+        if (Math.abs(dx) < DIRECTION_THRESHOLD && Math.abs(dy) < DIRECTION_THRESHOLD) return
+        isHorizontal = Math.abs(dx) > Math.abs(dy)
+        if (isHorizontal) stage?.setPointerCapture(e.pointerId)
+      }
+
+      if (!isHorizontal) return // vertical drags pass through as normal page scroll
+
+      e.preventDefault()
+      wasDraggingRef.current = true
+      // Drag left (dx < 0) advances the deck, same as scrolling down.
+      window.scrollTo(0, startScrollY - dx)
+    }
+
+    function onPointerUp(e: PointerEvent) {
+      active = false
+      isHorizontal = null
+      stage?.releasePointerCapture(e.pointerId)
+    }
+
+    stage.addEventListener('pointerdown', onPointerDown)
+    stage.addEventListener('pointermove', onPointerMove, { passive: false })
+    stage.addEventListener('pointerup', onPointerUp)
+    stage.addEventListener('pointercancel', onPointerUp)
+
+    return () => {
+      stage.removeEventListener('pointerdown', onPointerDown)
+      stage.removeEventListener('pointermove', onPointerMove)
+      stage.removeEventListener('pointerup', onPointerUp)
+      stage.removeEventListener('pointercancel', onPointerUp)
+    }
+  }, [])
+
   // --- Expand / collapse the active category into the near-fullscreen reader ---
   function openCategory(i: number) {
+    // A click fires right after a horizontal drag release too — don't let
+    // the swipe that just moved the deck also pop a card open.
+    if (wasDraggingRef.current) {
+      wasDraggingRef.current = false
+      return
+    }
     const card = cardRefs.current[i]
     if (!card) return
     setSourceRect(card.getBoundingClientRect())
@@ -202,10 +283,13 @@ export function Transport() {
             description="Cada tipo de maquinaria requiere una logística propia. Tocá una tarjeta (o seguí bajando) para ver el detalle de cada categoría."
           />
 
-          {/* The deck */}
+          {/* The deck — touch-action: pan-y leaves vertical touch scroll to
+              the browser as normal, while letting the drag effect above
+              claim horizontal gestures without the browser first trying
+              (and failing) to pan/navigate on its own. */}
           <div
             ref={stageRef}
-            className="relative mx-auto aspect-[3/2] w-full max-w-md lg:max-w-xl"
+            className="relative mx-auto aspect-[3/2] w-full max-w-md touch-pan-y lg:max-w-xl"
           >
             {TRANSPORT_ITEMS.map((cat, i) => (
               <div
