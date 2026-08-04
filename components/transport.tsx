@@ -125,6 +125,7 @@ export function Transport() {
     let isHorizontal: boolean | null = null
 
     const DIRECTION_THRESHOLD = 8 // px before committing to horizontal vs vertical
+    const DRAG_SPEED = 1.35 // slightly faster than a strict 1:1 finger-to-scroll ratio
 
     function onPointerDown(e: PointerEvent) {
       if (e.pointerType === 'mouse' && e.button !== 0) return
@@ -157,7 +158,7 @@ export function Transport() {
       wasDraggingRef.current = true
       // Drag right (dx > 0) advances the deck, matching the direction the
       // top card itself flies off in (x: '160%') — same as scrolling down.
-      window.scrollTo(0, startScrollY + dx)
+      window.scrollTo(0, startScrollY + dx * DRAG_SPEED)
     }
 
     function onPointerUp(e: PointerEvent) {
