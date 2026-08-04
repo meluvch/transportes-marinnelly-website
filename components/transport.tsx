@@ -52,6 +52,17 @@ export function Transport() {
       // Pin the title together with the deck so both stay put on screen —
       // only the cards move as the user scrolls.
       const tl = gsap.timeline({
+        // Tied to the timeline's own onUpdate (fires as its playhead
+        // actually moves), not the ScrollTrigger's — with scrub smoothing
+        // the visible cards lag behind the raw scroll position by design,
+        // so deriving activeIndex from the raw (instant) scroll progress
+        // let it get ahead of what was still on screen (only used as a
+        // fallback below; the click handler itself no longer gates on it —
+        // see openCategory).
+        onUpdate: () => {
+          const idx = Math.min(N, Math.floor(tl.progress() * (N + 0.001)))
+          setActiveIndex((prev) => (prev !== idx ? idx : prev))
+        },
         scrollTrigger: {
           trigger: pinRef.current,
           start: 'top top',
@@ -59,10 +70,6 @@ export function Transport() {
           scrub: 0.8,
           pin: true,
           anticipatePin: 1,
-          onUpdate: (self) => {
-            const idx = Math.min(N, Math.floor(self.progress * (N + 0.001)))
-            setActiveIndex((prev) => (prev !== idx ? idx : prev))
-          },
         },
       })
 
@@ -171,15 +178,10 @@ export function Transport() {
     const next = (openIndex + dir + N) % N
     gsap.to(overlayContentRef.current, {
       opacity: 0,
-      x: dir * -16,
       duration: 0.18,
       onComplete: () => {
         setOpenIndex(next)
-        gsap.fromTo(
-          overlayContentRef.current,
-          { opacity: 0, x: dir * 16 },
-          { opacity: 1, x: 0, duration: 0.25 }
-        )
+        gsap.fromTo(overlayContentRef.current, { opacity: 0 }, { opacity: 1, duration: 0.25 })
       },
     })
   }
@@ -211,7 +213,7 @@ export function Transport() {
                 ref={(el) => {
                   cardRefs.current[i] = el
                 }}
-                onClick={() => activeIndex === i && openCategory(i)}
+                onClick={() => openCategory(i)}
                 className="absolute inset-0 flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-lg"
               >
                 <div className="relative flex-1 overflow-hidden bg-neutral-900">

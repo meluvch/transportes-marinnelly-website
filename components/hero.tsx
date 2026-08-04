@@ -19,17 +19,31 @@ export function Hero() {
           <div className="absolute right-0 top-1/4 h-64 w-64 translate-x-1/3 rounded-full bg-brand/20 blur-3xl" />
         </div>
 
-        {/* Background video — a vertical cut for mobile, the wide cut everywhere else */}
+        {/* Background video — a vertical cut for mobile, the wide cut
+            everywhere else. Two separate <video> elements toggled with CSS,
+            not a single <video> with two <source media="...">: browsers only
+            evaluate a <source>'s media query once, when that video first
+            picks a resource — not reactively on resize/orientation change —
+            so it could get "stuck" on whichever cut matched at that one
+            moment (e.g. before the viewport had settled on load), regardless
+            of the actual screen size. CSS display toggling re-evaluates on
+            every resize like any other layout, so this can't happen. */}
         <video
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover md:hidden"
           autoPlay
           muted
           loop
           playsInline
-        >
-          <source src="/hero-mobile.mp4" media="(max-width: 767px)" type="video/mp4" />
-          <source src="/hero.mp4" type="video/mp4" />
-        </video>
+          src="/hero-mobile.mp4"
+        />
+        <video
+          className="absolute inset-0 hidden h-full w-full object-cover md:block"
+          autoPlay
+          muted
+          loop
+          playsInline
+          src="/hero.mp4"
+        />
 
         {/* Contrast overlays — darker on the left where the text sits */}
         <div
