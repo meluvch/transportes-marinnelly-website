@@ -1,5 +1,13 @@
 import Image from 'next/image'
-import { EMAIL, EMAIL_HREF, LOCATION, NAV_LINKS, WHATSAPP_URL } from '@/lib/site'
+import {
+  EMAIL,
+  EMAIL_HREF,
+  LOCATION,
+  NAV_LINKS,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  WHATSAPP_URL,
+} from '@/lib/site'
 
 export function SiteFooter() {
   return (
@@ -9,14 +17,14 @@ export function SiteFooter() {
           <div className="max-w-xs">
             <Image
               src="/logo-marinelly.png"
-              alt="Transporte y Logística Marinelly"
+              alt="Transportes Marinelly"
               width={180}
               height={60}
               className="h-10 w-auto"
             />
             <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-              Transporte de maquinaria pesada y cargas especiales en toda
-              Argentina.
+              Transporte y logística de maquinaria pesada y cargas especiales
+              en toda Argentina.
             </p>
           </div>
 
@@ -56,6 +64,14 @@ export function SiteFooter() {
                 </li>
                 <li>
                   <a
+                    href={PHONE_HREF}
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {PHONE_DISPLAY}
+                  </a>
+                </li>
+                <li>
+                  <a
                     href={EMAIL_HREF}
                     className="break-all text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
@@ -82,8 +98,8 @@ export function SiteFooter() {
 
         <div className="mt-14 flex flex-col gap-2 border-t border-border pt-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>
-            &copy; {new Date().getFullYear()} Transporte y Logística Marinelly.
-            Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} Transportes Marinelly. Todos los
+            derechos reservados.
           </p>
           <p>Cobertura nacional · Argentina</p>
         </div>

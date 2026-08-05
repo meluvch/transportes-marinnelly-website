@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import { ArrowRight, ArrowDown } from 'lucide-react'
 import { WHATSAPP_URL } from '@/lib/site'
@@ -7,37 +8,71 @@ import { WHATSAPP_URL } from '@/lib/site'
 const ease = [0.16, 1, 0.3, 1] as const
 
 export function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const mql = window.matchMedia('(min-width: 768px)')
+
+    const setSource = () => {
+      const src = mql.matches ? '/hero.mp4' : '/hero-mobile.mp4'
+      if (video.currentSrc.endsWith(src)) return
+      video.src = src
+      video.load()
+      video.play().catch(() => {})
+    }
+
+    setSource()
+    mql.addEventListener('change', setSource)
+    return () => mql.removeEventListener('change', setSource)
+  }, [])
+
   return (
     <section
       id="inicio"
-      className="relative flex min-h-svh w-full items-end overflow-hidden bg-neutral-900"
+      className="sticky top-0 flex min-h-svh w-full items-end overflow-hidden bg-neutral-900"
     >
-      {/* Branded backdrop — shown until a real hero video/photo is provided */}
-      <div className="absolute inset-0 bg-neutral-900" aria-hidden="true">
-        <div className="absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_14px)]" />
-        <div className="absolute right-0 top-1/4 h-64 w-64 translate-x-1/3 rounded-full bg-brand/20 blur-3xl" />
+      <div className="absolute inset-0">
+        {/* Branded backdrop — shown until a real hero video/photo is provided */}
+        <div className="absolute inset-0 bg-neutral-900" aria-hidden="true">
+          <div className="absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_14px)]" />
+          <div className="absolute right-0 top-1/4 h-64 w-64 translate-x-1/3 rounded-full bg-brand/20 blur-3xl" />
+        </div>
+
+        {/* Background video — a vertical cut for mobile, a wide cut for
+            tablet/desktop. Picked client-side via matchMedia (in the effect
+            above) instead of two <video> tags toggled with CSS or a single
+            <video> with two <source media="...">: CSS `display:none` doesn't
+            stop a <video src> from being fetched, so the old two-tag markup
+            downloaded BOTH cuts on every device (~3x the mobile payload).
+            <source media> has the opposite problem — it's only evaluated
+            once, on first resource selection, so it can get stuck on the
+            wrong cut across a resize. Setting `src` imperatively re-evaluates
+            on every viewport-crossing resize and only ever fetches one file.
+            No `src` on first render, so SSR/hydration never requests either
+            video — the "Branded backdrop" div above covers that instant. */}
+        <video
+          ref={videoRef}
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        />
+
+        {/* Contrast overlays — darker on the left where the text sits */}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"
+          aria-hidden="true"
+        />
       </div>
-
-      {/* Background video */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source src="/hero.mp4" type="video/mp4" />
-      </video>
-
-      {/* Contrast overlays — darker on the left where the text sits */}
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"
-        aria-hidden="true"
-      />
 
       {/* Editorial content — bottom-left aligned, not centered */}
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-40 sm:pb-28 lg:px-8">

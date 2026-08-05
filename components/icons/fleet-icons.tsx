@@ -79,6 +79,23 @@ export function PlayoBalancinIcon(props: IconProps) {
   )
 }
 
+/** Malacate — winch drum on a mount, cable running out to a hook. */
+export function MalacateIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      {/* mounting legs */}
+      <path d="M5.5 19 L5.5 13.8 M11.5 19 L11.5 13.8" />
+      <path d="M5.5 19 L11.5 19" />
+      {/* drum */}
+      <circle cx="8.5" cy="9.3" r="4.1" />
+      <circle cx="8.5" cy="9.3" r="1.1" fill="currentColor" stroke="none" />
+      {/* cable running out to a hook */}
+      <path d="M12.2 10.8 L19.5 16.5" />
+      <path d="M19.5 16.5 C 21.2 16.5 21.2 19 19.5 19 C 18.2 19 18 17.6 18.9 17" />
+    </svg>
+  )
+}
+
 /** Portacontenedor — chassis carrying a ribbed shipping container. */
 export function PortacontenedorIcon(props: IconProps) {
   return (

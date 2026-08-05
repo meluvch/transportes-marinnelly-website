@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import Image from 'next/image'
 import { motion, useScroll, useTransform } from 'motion/react'
 
 export function Impact() {
@@ -16,14 +17,14 @@ export function Impact() {
       ref={ref}
       className="relative flex min-h-[70svh] items-center overflow-hidden bg-neutral-900 sm:min-h-[85svh]"
     >
-      {/*
-        Branded backdrop until a real photo is provided.
-        Drop a file at /public/impacto.jpg and swap the div below for:
-        <Image src="/impacto.jpg" alt="..." fill sizes="100vw" className="object-cover" />
-      */}
       <motion.div style={{ y }} className="absolute inset-0 -top-[8%] h-[116%]" aria-hidden="true">
-        <div className="absolute inset-0 bg-neutral-900" />
-        <div className="absolute inset-0 opacity-[0.05] [background-image:repeating-linear-gradient(135deg,white_0,white_1px,transparent_1px,transparent_16px)]" />
+        <Image
+          src="/cadatraslado.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
       </motion.div>
       <div
         className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/30"
@@ -31,7 +32,7 @@ export function Impact() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 lg:px-8">
-        <motion.p
+        <motion.h2
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
@@ -40,7 +41,7 @@ export function Impact() {
         >
           Cada traslado es una responsabilidad.
           <span className="block text-white/55">No una carga más.</span>
-        </motion.p>
+        </motion.h2>
       </div>
     </section>
   )
